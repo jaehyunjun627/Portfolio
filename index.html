@@ -286,12 +286,19 @@ main, .site-footer { position: relative; z-index: 1; }
 /* =========================================================
    PROFILE + INDEX
    ========================================================= */
+.profile-layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: clamp(32px, 4vw, 56px) 24px; align-items: start; }
+.profile-photo { position: sticky; top: calc(var(--header-h) + 24px); width: min(100%, 240px); aspect-ratio: 2 / 3; overflow: hidden; border: 1px solid var(--ink); background: #fff; }
+.profile-photo img { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 860px) {
+  .profile-layout { grid-template-columns: minmax(0, 1fr); }
+  .profile-photo { position: static; width: 160px; }
+}
 .profile-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(32px, 4vw, 56px) 24px; }
 .pf { grid-column: span 6; }
 .pf.wide { grid-column: span 12; }
 .pf h3 { padding-bottom: 14px; border-bottom: 1px solid var(--ink); margin-bottom: 4px; }
 .tl > li {
-  display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 16px;
+  display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 12px;
   padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 16px; line-height: 1.6;
 }
 .tl time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; padding-top: 2px; }
@@ -725,8 +732,8 @@ html:not(.anim) .stage-inner { grid-template-columns: minmax(0, 1fr); }
       <a href="#crawler" data-toc="crawler"><span class="toc-t"><span class="full"><b>01</b>Crawler</span><span class="short">01</span></span><span class="toc-bar"><i></i></span></a>
       <a href="#stella" data-toc="stella"><span class="toc-t"><span class="full"><b>02</b>Stella</span><span class="short">02</span></span><span class="toc-bar"><i></i></span></a>
       <a href="#airism" data-toc="airism"><span class="toc-t"><span class="full"><b>03</b>AIRism</span><span class="short">03</span></span><span class="toc-bar"><i></i></span></a>
-      <a href="#mag" data-toc="mag"><span class="toc-t"><span class="full"><b>04</b>@satan.mag</span><span class="short">04</span></span><span class="toc-bar"><i></i></span></a>
-      <a href="#hanja" data-toc="hanja"><span class="toc-t"><span class="full"><b>05</b>Kanji App</span><span class="short">05</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#hanja" data-toc="hanja"><span class="toc-t"><span class="full"><b>04</b>Kanji App</span><span class="short">04</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#mag" data-toc="mag"><span class="toc-t"><span class="full"><b>05</b>@satan.mag</span><span class="short">05</span></span><span class="toc-bar"><i></i></span></a>
       <a href="#contact" data-toc="contact"><span class="toc-t"><span class="full">Contact</span><span class="short">C</span></span><span class="toc-bar"><i></i></span></a>
     </nav>
   </div>
@@ -765,6 +772,9 @@ html:not(.anim) .stage-inner { grid-template-columns: minmax(0, 1fr); }
       <p class="label">Profile</p>
       <h2 class="sec-title">전재현</h2>
     </header>
+
+    <div class="profile-layout">
+    <figure class="profile-photo" data-reveal><img src="assets/profile.webp" alt="전재현 프로필 사진" width="1024" height="1536"></figure>
 
     <div class="profile-grid">
       <div class="pf" data-reveal>
@@ -810,6 +820,7 @@ html:not(.anim) .stage-inner { grid-template-columns: minmax(0, 1fr); }
         </ul>
       </div>
     </div>
+    </div>
   </div>
 </section>
 
@@ -823,8 +834,8 @@ html:not(.anim) .stage-inner { grid-template-columns: minmax(0, 1fr); }
       <a href="#crawler" style="--c:var(--green)"><span class="no">01</span><span class="t">인스타그램 크롤러 개발</span></a>
       <a href="#stella" style="--c:var(--red)"><span class="no">02</span><span class="t">스텔라 아르투아</span></a>
       <a href="#airism" style="--c:var(--blue)"><span class="no">03</span><span class="t">에어리즘</span></a>
-      <a href="#mag" style="--c:var(--crimson)"><span class="no">04</span><span class="t">@satan.mag</span></a>
-      <a href="#hanja" style="--c:var(--gray)"><span class="no">05</span><span class="t">한자 학습 웹앱</span></a>
+      <a href="#hanja" style="--c:var(--gray)"><span class="no">04</span><span class="t">한자 학습 웹앱</span></a>
+      <a href="#mag" style="--c:var(--crimson)"><span class="no">05</span><span class="t">@satan.mag</span></a>
     </nav>
   </div>
 </section>
@@ -1109,12 +1120,98 @@ html:not(.anim) .stage-inner { grid-template-columns: minmax(0, 1fr); }
 </section>
 
 <!-- =====================================================
-     04 @satan.mag  (point: crimson — PDF 'PROJECT 02' 페이지 레이아웃)
+     04 HANJA APP  (point: gray)
      ===================================================== -->
-<section class="sec" id="mag" data-accent="mag" data-chapter="04 — @satan.mag">
+<section class="sec" id="hanja" data-accent="gray" data-chapter="04 — Kanji App">
+  <div class="wrap">
+    <header class="sec-head has-visual" data-reveal>
+      <div class="sec-no">04</div>
+      <div class="sec-head-body">
+        <div>
+          <p class="sec-kicker label">TEAM 積み木 · 국비교육 일본어반 1차 프로젝트</p>
+          <h2 class="sec-title">한자 학습 웹앱<span class="sec-title-sub">한자오보에 <small>(오보에루 - 외우다)</small></span></h2>
+          <p class="sec-lead">국비교육 일본어반 1차 프로젝트. 일본어를 공부하며 느낀 불편을 직접 해결한 JLPT 한자 학습 웹앱</p>
+        </div>
+        <figure class="sec-visual"><img src="assets/hanja-laptop.png" alt="한자오보에 공부 화면을 띄운 노트북" width="1224" height="742"></figure>
+      </div>
+    </header>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">개요</h3>
+      <div class="row-body">
+        <dl class="meta-dl">
+          <dt class="label">Team</dt><dd>TEAM 積み木, 6명</dd>
+          <dt class="label">Role</dt><dd>팀장, Git 관리 및 코드 통합</dd>
+          <dt class="label">Stack</dt><dd>JSP, CSS, Java Servlet, Oracle, Java 웹 크롤링</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">왜 만들었나</h3>
+      <div class="row-body">
+        <p>일본어반 수강생으로서 직접 한자를 외우며 겪은 불편에서 출발했습니다. 기존 서비스 세 곳을 비교해 장점은 가져오고 빈 곳을 채웠습니다.</p>
+        <ul class="compare">
+          <li><span class="svc">NihongoKanji.com</span><span class="gap">진척도 기능이 없음</span><span class="fix">진척도 추가</span></li>
+          <li><span class="svc">회독 JLPT</span><span class="gap">테스트 기능이 없음</span><span class="fix">테스트 추가</span></li>
+          <li><span class="svc">안키</span><span class="gap">사용이 어려움</span><span class="fix">사용 편의성 개선</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">사용자 흐름</h3>
+      <div class="row-body">
+        <p>로그인 → 메인 → 레벨 선택 → 섹터 공부 → 섹터 테스트, 그리고 오답 공부·누적 테스트와 마이페이지로 이어지는 흐름을 먼저 그린 뒤 기능을 나눴습니다.</p>
+      </div>
+    </div>
+
+    <!-- 사용자 흐름 다이어그램: JS가 SVG를 생성(데스크톱/모바일 두 레이아웃) -->
+    <div class="flow" data-flow>
+      <div class="flow-cap">
+        <span class="label">User Flow</span>
+        <span class="label">Login → Mypage</span>
+      </div>
+      <div class="flow-svg" role="img" aria-label="사용자 흐름: 로그인, 메인, 레벨 선택, 섹터 공부, 섹터 테스트, 그리고 오답 공부, 누적 테스트, 마이페이지"></div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">주요 기능</h3>
+      <div class="row-body">
+        <ul class="feat">
+          <li><h4><span>A</span>공부</h4><p>JLPT 시험 범위를 기준으로 크롤링한 한자 데이터를 레벨-섹터 단위로 나눠, 하루 한 섹터를 끝낼 수 있는 양으로 조절</p></li>
+          <li><h4><span>B</span>테스트</h4><p>정답·오답·모름을 즉시 표시하고 기록을 저장. 한 섹터를 끝내면 출석 체크</p></li>
+          <li><h4><span>C</span>마이페이지</h4><p>진척도, 정답률, 연속 학습일, 레벨별 남은 학습량 표시</p></li>
+          <li><h4><span>D</span>DB</h4><p>회원·학습 로그·한자 테이블을 분리하고, 로그 테이블이 회원과 한자를 잇는 구조</p></li>
+        </ul>
+        <div class="figs">
+          <!-- 발표 자료: 표지 -->
+          <figure class="ph" style="--ar:16/9"><img src="assets/hanja-slide-title.png" alt="TEAM 積み木 1차 프로젝트 한자오보에 발표 표지" loading="lazy" onerror="ph(this)"></figure>
+          <!-- 발표 자료: 테스트 화면 기능 설명 -->
+          <figure class="ph" style="--ar:16/9"><img src="assets/hanja-slide-test.png" alt="한자오보에 테스트 화면 기능 설명 슬라이드" loading="lazy" onerror="ph(this)"></figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">팀장으로서<br>배운 점</h3>
+      <div class="row-body">
+        <ol class="nlist">
+          <li><div><h4>기획 단계</h4><p>역할 분담과 작업 환경(스크립틀릿·서블릿) 정의가 늦어 혼선이 생겼습니다. 이후에는 기획서를 더 구체적으로 쓰고, 작업 환경을 먼저 합의하는 것을 원칙으로 삼았습니다.</p></div></li>
+          <li><div><h4>Git</h4><p>중복 작업, 브랜치 통합, 덮어쓰기 문제를 통합 담당으로서 직접 겪었습니다. 브랜치 사용 규칙과 잦은 공유 회의의 필요성을 배웠습니다.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     05 @satan.mag  (point: crimson — PDF 'PROJECT 02' 페이지 레이아웃)
+     ===================================================== -->
+<section class="sec" id="mag" data-accent="mag" data-chapter="05 — @satan.mag">
   <div class="wrap">
     <header class="sec-head" data-reveal>
-      <div class="sec-no">04</div>
+      <div class="sec-no">05</div>
       <div>
         <p class="sec-kicker label">2023.12 ~ 2024.12 · 인스타그램 매거진 공동 운영 · 에디터</p>
         <h2 class="sec-title">@satan.mag<span class="mag-title-ast">*</span></h2>
@@ -1201,92 +1298,6 @@ html:not(.anim) .stage-inner { grid-template-columns: minmax(0, 1fr); }
             <p class="v"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#1c1b18" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/></svg><span><span data-count="8.1" data-decimals="1">8.1</span>K+</span></p>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =====================================================
-     05 HANJA APP  (point: gray)
-     ===================================================== -->
-<section class="sec" id="hanja" data-accent="gray" data-chapter="05 — Kanji App">
-  <div class="wrap">
-    <header class="sec-head has-visual" data-reveal>
-      <div class="sec-no">05</div>
-      <div class="sec-head-body">
-        <div>
-          <p class="sec-kicker label">TEAM 積み木 · 국비교육 일본어반 1차 프로젝트</p>
-          <h2 class="sec-title">한자 학습 웹앱<span class="sec-title-sub">한자오보에 <small>(오보에루 - 외우다)</small></span></h2>
-          <p class="sec-lead">국비교육 일본어반 1차 프로젝트. 일본어를 공부하며 느낀 불편을 직접 해결한 JLPT 한자 학습 웹앱</p>
-        </div>
-        <figure class="sec-visual"><img src="assets/hanja-laptop.png" alt="한자오보에 공부 화면을 띄운 노트북" width="1224" height="742"></figure>
-      </div>
-    </header>
-
-    <div class="row" data-reveal>
-      <h3 class="row-label label">개요</h3>
-      <div class="row-body">
-        <dl class="meta-dl">
-          <dt class="label">Team</dt><dd>TEAM 積み木, 6명</dd>
-          <dt class="label">Role</dt><dd>팀장, Git 관리 및 코드 통합</dd>
-          <dt class="label">Stack</dt><dd>JSP, CSS, Java Servlet, Oracle, Java 웹 크롤링</dd>
-        </dl>
-      </div>
-    </div>
-
-    <div class="row" data-reveal>
-      <h3 class="row-label label">왜 만들었나</h3>
-      <div class="row-body">
-        <p>일본어반 수강생으로서 직접 한자를 외우며 겪은 불편에서 출발했습니다. 기존 서비스 세 곳을 비교해 장점은 가져오고 빈 곳을 채웠습니다.</p>
-        <ul class="compare">
-          <li><span class="svc">NihongoKanji.com</span><span class="gap">진척도 기능이 없음</span><span class="fix">진척도 추가</span></li>
-          <li><span class="svc">회독 JLPT</span><span class="gap">테스트 기능이 없음</span><span class="fix">테스트 추가</span></li>
-          <li><span class="svc">안키</span><span class="gap">사용이 어려움</span><span class="fix">사용 편의성 개선</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="row" data-reveal>
-      <h3 class="row-label label">사용자 흐름</h3>
-      <div class="row-body">
-        <p>로그인 → 메인 → 레벨 선택 → 섹터 공부 → 섹터 테스트, 그리고 오답 공부·누적 테스트와 마이페이지로 이어지는 흐름을 먼저 그린 뒤 기능을 나눴습니다.</p>
-      </div>
-    </div>
-
-    <!-- 사용자 흐름 다이어그램: JS가 SVG를 생성(데스크톱/모바일 두 레이아웃) -->
-    <div class="flow" data-flow>
-      <div class="flow-cap">
-        <span class="label">User Flow</span>
-        <span class="label">Login → Mypage</span>
-      </div>
-      <div class="flow-svg" role="img" aria-label="사용자 흐름: 로그인, 메인, 레벨 선택, 섹터 공부, 섹터 테스트, 그리고 오답 공부, 누적 테스트, 마이페이지"></div>
-    </div>
-
-    <div class="row" data-reveal>
-      <h3 class="row-label label">주요 기능</h3>
-      <div class="row-body">
-        <ul class="feat">
-          <li><h4><span>A</span>공부</h4><p>JLPT 시험 범위를 기준으로 크롤링한 한자 데이터를 레벨-섹터 단위로 나눠, 하루 한 섹터를 끝낼 수 있는 양으로 조절</p></li>
-          <li><h4><span>B</span>테스트</h4><p>정답·오답·모름을 즉시 표시하고 기록을 저장. 한 섹터를 끝내면 출석 체크</p></li>
-          <li><h4><span>C</span>마이페이지</h4><p>진척도, 정답률, 연속 학습일, 레벨별 남은 학습량 표시</p></li>
-          <li><h4><span>D</span>DB</h4><p>회원·학습 로그·한자 테이블을 분리하고, 로그 테이블이 회원과 한자를 잇는 구조</p></li>
-        </ul>
-        <div class="figs">
-          <!-- 발표 자료: 표지 -->
-          <figure class="ph" style="--ar:16/9"><img src="assets/hanja-slide-title.png" alt="TEAM 積み木 1차 프로젝트 한자오보에 발표 표지" loading="lazy" onerror="ph(this)"></figure>
-          <!-- 발표 자료: 테스트 화면 기능 설명 -->
-          <figure class="ph" style="--ar:16/9"><img src="assets/hanja-slide-test.png" alt="한자오보에 테스트 화면 기능 설명 슬라이드" loading="lazy" onerror="ph(this)"></figure>
-        </div>
-      </div>
-    </div>
-
-    <div class="row" data-reveal>
-      <h3 class="row-label label">팀장으로서<br>배운 점</h3>
-      <div class="row-body">
-        <ol class="nlist">
-          <li><div><h4>기획 단계</h4><p>역할 분담과 작업 환경(스크립틀릿·서블릿) 정의가 늦어 혼선이 생겼습니다. 이후에는 기획서를 더 구체적으로 쓰고, 작업 환경을 먼저 합의하는 것을 원칙으로 삼았습니다.</p></div></li>
-          <li><div><h4>Git</h4><p>중복 작업, 브랜치 통합, 덮어쓰기 문제를 통합 담당으로서 직접 겪었습니다. 브랜치 사용 규칙과 잦은 공유 회의의 필요성을 배웠습니다.</p></div></li>
-        </ol>
       </div>
     </div>
   </div>
