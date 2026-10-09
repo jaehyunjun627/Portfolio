@@ -1,0 +1,1633 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전재현 — Marketer Portfolio</title>
+<meta name="description" content="마케터 전재현 포트폴리오. 데이터에 숨은 소비자의 니즈를 찾아내고, 데이터를 가져올 도구까지 직접 만듭니다.">
+
+<!-- Fonts: Pretendard(국문) + Instrument Serif(영문 디스플레이) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap">
+
+<!-- Motion: GSAP + ScrollTrigger + Lenis (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+  // 라이브러리가 모두 로드됐고 사용자가 '동작 줄이기'를 켜지 않았을 때만 모션 모드로 진입.
+  // (CDN 실패·reduced-motion 시에는 모든 콘텐츠가 정적으로 그대로 보인다)
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.gsap && window.ScrollTrigger && !reduce) document.documentElement.classList.add('anim');
+  })();
+  // 이미지 플레이스홀더: 파일이 아직 없으면 점선 프레임 + 파일 경로만 표시
+  function ph(img) {
+    var f = img.closest('.ph');
+    if (!f) return;
+    f.classList.add('is-empty');
+    f.setAttribute('data-file', img.getAttribute('src'));
+  }
+</script>
+
+<style>
+/* =========================================================
+   TOKENS
+   ========================================================= */
+:root {
+  --paper: #f2eee3;
+  --ink: #1c1b18;
+  --muted: #6b675e;
+  --rule: rgba(28, 27, 24, .16);
+  --grid: rgba(28, 27, 24, .075);
+  --dot: rgba(28, 27, 24, .34);
+
+  --green: #2f6a4b;
+  --gray: #6f7478;
+  --red: #a8232c;
+  --blue: #22509c;
+  --crimson: #c0392f;
+
+  --accent: var(--ink);
+  --cell: 72px;
+  --gutter: clamp(16px, 4vw, 56px);
+  --maxw: 1320px;
+  --header-h: 64px;
+
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+          'Noto Sans KR', 'Hiragino Sans', 'Yu Gothic', 'Malgun Gothic', sans-serif;
+  --ease: cubic-bezier(.2, .7, .1, 1);
+}
+@media (max-width: 640px) {
+  :root { --cell: 48px; --gutter: 16px; --header-h: 56px; }
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: -.01em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, p, ul, ol, figure, dl, dd { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; }
+::selection { background: var(--ink); color: var(--paper); }
+
+.wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+.serif { font-family: var(--serif); font-weight: 400; letter-spacing: 0; }
+.label {
+  font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  font-variant-numeric: tabular-nums; line-height: 1.4;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* =========================================================
+   GRID PAPER (고정 배경: 격자선 + 교차점 점)
+   ========================================================= */
+.grid-lines, .grid-dots, .grid-draw { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.grid-lines {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+}
+.grid-dots {
+  background-image: radial-gradient(circle, var(--dot) 1.15px, transparent 1.7px);
+  background-size: var(--cell) var(--cell);
+  background-position: calc(var(--cell) / -2) calc(var(--cell) / -2);
+}
+.grid-draw { overflow: hidden; }
+.grid-draw i { position: absolute; display: block; background: var(--grid); }
+.grid-draw .gv { top: 0; bottom: 0; width: 1px; transform-origin: 50% 0; }
+.grid-draw .gh { left: 0; right: 0; height: 1px; transform-origin: 0 50%; }
+.anim .grid-lines, .anim .grid-dots { opacity: 0; }
+
+main, .site-footer { position: relative; z-index: 1; }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  height: var(--header-h);
+  color: var(--ink);
+  transition: color .4s var(--ease);
+}
+.site-header::before {
+  content: ''; position: absolute; inset: 0 0 -20px; z-index: -1; pointer-events: none;
+  background: linear-gradient(var(--hd-bg, var(--paper)) 60%, transparent);
+  transition: background .4s var(--ease), opacity .4s var(--ease);
+}
+.site-header.is-top::before { opacity: 0; }
+.site-header.is-dark { color: var(--paper); }
+.hd { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.hd-logo { font-family: var(--serif); font-size: 22px; line-height: 1; white-space: nowrap; }
+.hd-logo:hover { opacity: .7; }
+
+/* TOC: 항목별 바로가기 + 섹션 진척도 바 */
+.toc { flex: 1; display: flex; gap: clamp(6px, 1vw, 14px); max-width: 980px; margin-left: auto; }
+.toc a { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; padding: 6px 0; }
+.toc-t { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .42; transition: opacity .35s var(--ease); }
+.toc-t .short { display: none; }
+.toc-t b { font-weight: 600; margin-right: .5em; }
+.toc a:hover .toc-t { opacity: .85; }
+.toc a.is-active .toc-t { opacity: 1; }
+.toc-bar { position: relative; display: block; height: 2px; overflow: hidden; }
+.toc-bar::before { content: ''; position: absolute; inset: 0; background: currentColor; opacity: .16; }
+.toc-bar i { position: absolute; inset: 0; background: currentColor; transform: scaleX(0); transform-origin: left; }
+.toc a.is-done .toc-bar i { opacity: .55; }
+@media (max-width: 900px) {
+  .hd { gap: 20px; }
+  .toc-t .full { display: none; }
+  .toc-t .short { display: inline; }
+}
+@media (max-width: 480px) {
+  .hd-logo { display: none; }
+  .toc { margin-left: 0; gap: 6px; }
+  .toc-t { text-align: center; font-size: 11px; letter-spacing: .06em; }
+}
+.anim .site-header, .anim .hero-scroll { opacity: 0; }
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero {
+  position: relative;
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: stretch;
+}
+.hero-inner {
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: calc(var(--header-h) + 32px); padding-bottom: 96px;
+}
+.hero-name { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: clamp(20px, 3vw, 40px); }
+.hero-name > span { display: inline-block; }
+.hero-name .ko { font-size: clamp(18px, 1.8vw, 22px); font-weight: 600; }
+.hero-name .en { color: var(--muted); }
+.hero-title {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(54px, 10.6vw, 168px);
+  line-height: .95; letter-spacing: -.02em;
+}
+.hero-title .line { display: block; overflow: hidden; padding-bottom: .06em; }
+.hero-title .line > span { display: inline-block; }
+.hero-title em { font-style: italic; }
+.hero-ko {
+  margin-top: clamp(28px, 4vw, 56px);
+  font-size: clamp(18px, 2.1vw, 28px); font-weight: 500; line-height: 1.6; letter-spacing: -.01em;
+  max-width: 30em;
+}
+.hero-ko strong { font-weight: 700; }
+.hero-ko-sub { display: inline-block; margin-top: .6em; }
+.hero-scroll {
+  position: absolute; left: var(--gutter); bottom: 28px;
+  display: flex; align-items: center; gap: 12px; color: var(--muted);
+}
+.hero-scroll i { display: block; width: 48px; height: 1px; background: currentColor; transform-origin: left; animation: scrollhint 2.2s var(--ease) infinite; }
+@keyframes scrollhint { 0% { transform: scaleX(0); } 60% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: 0; } }
+.anim [data-hero] { opacity: 0; }
+
+/* =========================================================
+   SECTION SCAFFOLD
+   ========================================================= */
+.sec { position: relative; padding: clamp(96px, 13vw, 176px) 0; }
+.sec-head {
+  display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 24px;
+  border-top: 1px solid currentColor; padding-top: 20px;
+  margin-bottom: clamp(56px, 8vw, 112px);
+}
+.sec-no { font-family: var(--serif); font-size: clamp(72px, 10vw, 160px); line-height: .82; color: var(--accent); }
+.sec-kicker { color: var(--accent); margin-bottom: 18px; }
+.sec-title { font-size: clamp(34px, 5vw, 68px); font-weight: 700; letter-spacing: -.02em; line-height: 1.12; }
+.has-visual .sec-head-body {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(24px, 3vw, 48px); align-items: center;
+}
+.has-visual .sec-title { font-size: clamp(34px, 4.2vw, 60px); }
+.sec-title-sub { display: block; margin-top: .25em; font-size: .62em; letter-spacing: -.02em; color: var(--accent); }
+.sec-title-sub small { font-size: .5em; font-weight: 500; letter-spacing: -.02em; color: var(--muted); vertical-align: .25em; margin-left: .2em; }
+.sec-visual { margin-right: calc(var(--gutter) * -0.5); }
+.sec-visual img { width: 100%; height: auto; filter: drop-shadow(0 24px 32px rgba(28, 27, 24, .14)); }
+@media (max-width: 1000px) {
+  .has-visual .sec-head-body { grid-template-columns: minmax(0, 1fr); }
+  .sec-visual { margin: 8px 0 0; }
+}
+.sec-lead { margin-top: 24px; font-size: clamp(18px, 1.9vw, 24px); font-weight: 500; line-height: 1.6; letter-spacing: -.01em; max-width: 34em; }
+
+.row {
+  display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 24px;
+  padding: clamp(32px, 4vw, 48px) 0; border-top: 1px solid var(--rule);
+}
+.row-label { color: var(--accent); padding-top: 6px; }
+.row-body > p { font-size: 17px; line-height: 1.85; max-width: 40em; }
+.row-body > p + p { margin-top: 1em; }
+@media (max-width: 860px) {
+  .sec-head, .row { grid-template-columns: minmax(0, 1fr); }
+  .row { gap: 12px; }
+}
+
+/* numbered list */
+.nlist { counter-reset: n; display: grid; gap: 0; }
+.nlist > li {
+  counter-increment: n; position: relative;
+  display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 8px;
+  padding: 18px 0; border-bottom: 1px solid var(--rule);
+}
+.nlist > li:first-child { padding-top: 4px; }
+.nlist > li::before { content: counter(n, decimal-leading-zero); font-family: var(--serif); font-size: 22px; line-height: 1.3; color: var(--accent); }
+.nlist h4 { font-size: 18px; font-weight: 700; letter-spacing: -.015em; margin-bottom: 4px; }
+.nlist p { color: var(--muted); font-size: 16px; line-height: 1.75; }
+.nlist p strong { color: var(--ink); font-weight: 600; }
+
+/* bullets */
+.blist > li { position: relative; padding: 10px 0 10px 22px; border-bottom: 1px solid var(--rule); font-size: 17px; line-height: 1.75; }
+.blist > li::before { content: ''; position: absolute; left: 2px; top: 22px; width: 8px; height: 1px; background: var(--accent); }
+
+/* placeholder figures */
+.ph {
+  position: relative; overflow: hidden; aspect-ratio: var(--ar, 4 / 3);
+  border: 1px solid var(--rule); background: rgba(28, 27, 24, .03);
+}
+.ph img { width: 100%; height: 100%; object-fit: cover; }
+.ph.is-empty { border-style: dashed; display: grid; place-items: center; }
+.ph.is-empty img { display: none; }
+.ph.is-empty::after {
+  content: attr(data-file);
+  font: 500 12px/1.4 ui-monospace, 'SFMono-Regular', Consolas, monospace; letter-spacing: 0;
+  color: var(--muted); padding: 12px; text-align: center;
+}
+.figs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: clamp(40px, 6vw, 72px); }
+@media (max-width: 640px) { .figs { grid-template-columns: minmax(0, 1fr); } }
+
+/* reveal */
+.anim [data-reveal] { opacity: 0; }
+
+/* =========================================================
+   PROFILE + INDEX
+   ========================================================= */
+.profile-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(32px, 4vw, 56px) 24px; }
+.pf { grid-column: span 6; }
+.pf.wide { grid-column: span 12; }
+.pf h3 { padding-bottom: 14px; border-bottom: 1px solid var(--ink); margin-bottom: 4px; }
+.tl > li {
+  display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 16px;
+  padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 16px; line-height: 1.6;
+}
+.tl time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; padding-top: 2px; }
+.tl b { font-weight: 700; }
+.tl .sub { color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; }
+.chips li { border: 1px solid var(--ink); border-radius: 99px; padding: 6px 14px; font-size: 15px; font-weight: 500; line-height: 1.4; }
+@media (max-width: 860px) {
+  .pf { grid-column: span 12; }
+  .tl > li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+
+.axis {
+  font-size: clamp(26px, 3.6vw, 48px); font-weight: 600; line-height: 1.4; letter-spacing: -.02em;
+  max-width: 22em; margin-bottom: clamp(48px, 7vw, 96px);
+}
+.axis .serif { font-style: italic; font-size: 1.08em; }
+.works-title {
+  font-family: var(--serif); font-weight: 400; letter-spacing: -.015em;
+  font-size: clamp(96px, 19vw, 300px); line-height: .85; margin-bottom: clamp(32px, 4vw, 56px);
+}
+.index-list { border-top: 1px solid var(--ink); }
+.index-list a {
+  display: grid; grid-template-columns: clamp(64px, 10vw, 150px) minmax(0, 1fr); gap: 16px; align-items: baseline;
+  padding: clamp(22px, 3vw, 40px) 0; border-bottom: 1px solid var(--rule);
+  position: relative; transition: padding .5s var(--ease);
+}
+.index-list a::before {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--c, var(--ink));
+  transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease);
+}
+.index-list a:hover { padding-left: 16px; }
+.index-list a:hover::before { transform: scaleX(1); }
+.index-list .no { font-family: var(--serif); font-size: clamp(36px, 5vw, 76px); line-height: 1; color: var(--c, var(--ink)); }
+.index-list .t { font-size: clamp(26px, 4.4vw, 64px); font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
+.index-list .m { color: var(--muted); text-align: right; }
+
+
+/* =========================================================
+   POINT COLORS / THEMES
+   ========================================================= */
+[data-accent="green"] { --accent: var(--green); }
+[data-accent="gray"]  { --accent: var(--gray); }
+[data-accent="ink"]   { --accent: var(--ink); }
+
+.is-dark {
+  --accent: var(--paper);
+  --rule: rgba(242, 238, 227, .2);
+  --muted: rgba(242, 238, 227, .66);
+  --ink: var(--paper);
+  color: var(--paper);
+  background-color: var(--sec-bg);
+  background-image:
+    radial-gradient(circle, rgba(242, 238, 227, .26) 1.15px, transparent 1.7px),
+    linear-gradient(to right, rgba(242, 238, 227, .07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(242, 238, 227, .07) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+  background-position: calc(var(--cell) / -2) calc(var(--cell) / -2), 0 0, 0 0;
+}
+.is-dark .ph { background: rgba(242, 238, 227, .05); }
+[data-accent="red"]  { --sec-bg: var(--red); }
+[data-accent="blue"] { --sec-bg: var(--blue); }
+
+/* =========================================================
+   01 CRAWLER — pipeline diagram
+   ========================================================= */
+.pipe { position: relative; margin: clamp(24px, 4vw, 48px) 0; }
+.pipe-inner { display: flex; flex-direction: column; justify-content: center; padding-top: 24px; padding-bottom: 24px; }
+.pipe-cap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+.pipe-cap .label:first-child { color: var(--accent); }
+.pipe-cap .label:last-child { color: var(--muted); }
+.pipe-track { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr) 40px minmax(0, 1fr) 40px minmax(0, 1fr); align-items: stretch; }
+.pipe-node {
+  position: relative; background: var(--paper); border: 1px solid var(--ink);
+  padding: clamp(20px, 1.8vw, 28px); min-height: 400px;
+  transition: opacity .6s var(--ease), border-color .6s var(--ease), box-shadow .6s var(--ease);
+}
+.pn-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; }
+.pn-no {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid currentColor; font-family: var(--serif); font-size: 19px;
+  transition: background .5s var(--ease), color .5s var(--ease), border-color .5s var(--ease);
+}
+.pn-en { font-family: var(--serif); font-style: italic; font-size: 19px; text-align: right; color: var(--muted); }
+.pipe-node h4 { font-size: clamp(24px, 2.2vw, 32px); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; margin-bottom: 20px; }
+.pipe-node h4 small { display: block; margin-top: 8px; font-size: 15px; font-weight: 600; letter-spacing: -.02em; color: var(--accent); }
+.pipe-node ul { display: grid; gap: 10px; transition: opacity .6s var(--ease) .1s, transform .6s var(--ease) .1s; }
+.pipe-node li { font-size: 15px; line-height: 1.6; padding-left: 14px; position: relative; color: var(--muted); }
+.pipe-node li::before { content: ''; position: absolute; left: 0; top: .78em; width: 6px; height: 1px; background: var(--accent); }
+.pipe-link { position: relative; align-self: start; margin-top: 52px; height: 1px; background: var(--rule); }
+.pipe-link i {
+  position: absolute; inset: 0; background: var(--accent);
+  transform: scaleX(var(--fill, 1)); transform-origin: left;
+}
+.pipe-link::after {
+  content: ''; position: absolute; right: -1px; top: -4px; width: 9px; height: 9px;
+  border-top: 1px solid var(--accent); border-right: 1px solid var(--accent); transform: rotate(45deg);
+  opacity: var(--arrow, 1); transition: opacity .3s;
+}
+.anim .pipe-node { opacity: .32; border-style: dashed; }
+.anim .pipe-node ul { opacity: 0; transform: translateY(14px); }
+.pipe-node.is-on { opacity: 1 !important; border-style: solid !important; border-color: var(--accent); box-shadow: 6px 6px 0 var(--accent); }
+.pipe-node.is-on ul { opacity: 1 !important; transform: none !important; }
+.pipe-node.is-on .pn-no { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+html:not(.anim) .pipe-node { border-color: var(--accent); }
+html:not(.anim) .pipe-node .pn-no { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+@media (min-width: 1101px) {
+  .anim .pipe-inner { min-height: 100vh; padding-top: var(--header-h); }
+}
+@media (max-width: 1100px) {
+  .pipe-track { grid-template-columns: minmax(0, 1fr); }
+  .pipe-node { min-height: 0; }
+  .pipe-link { align-self: auto; justify-self: start; margin: 0 0 0 32px; width: 1px; height: 56px; }
+  .pipe-link i { transform: scaleY(var(--fill, 1)); transform-origin: top; }
+  .pipe-link::after { right: auto; left: -4px; top: auto; bottom: 1px; transform: rotate(135deg); }
+}
+
+/* method steps */
+.method { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+.method li { padding: 20px 20px 24px 0; border-right: 1px solid var(--rule); }
+.method li + li { padding-left: 20px; }
+.method li:last-child { border-right: 0; }
+.method .label { color: var(--accent); display: block; margin-bottom: 14px; }
+.method h4 { font-size: 19px; font-weight: 700; letter-spacing: -.015em; margin-bottom: 8px; }
+.method p { font-size: 15px; line-height: 1.75; color: var(--muted); }
+@media (max-width: 1000px) {
+  .method { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .method li:nth-child(2) { border-right: 0; }
+  .method li:nth-child(3) { padding-left: 0; }
+  .method li:nth-child(n+3) { border-top: 1px solid var(--rule); }
+}
+@media (max-width: 560px) {
+  .method { grid-template-columns: minmax(0, 1fr); }
+  .method li, .method li + li { padding-left: 0; border-right: 0; }
+  .method li + li { border-top: 1px solid var(--rule); }
+}
+
+/* flip cards */
+.flips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.flip {
+  display: block; width: 100%; height: 340px; padding: 0; border: 0; background: none;
+  text-align: left; cursor: pointer; perspective: 1400px;
+}
+.flip-inner { display: block; position: relative; height: 100%; transform-style: preserve-3d; transition: transform .9s var(--ease); }
+.flip-face {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  padding: clamp(22px, 2.2vw, 30px);
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  border: 1px solid var(--ink); background: var(--paper);
+}
+.flip-back { transform: rotateY(180deg); background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.flip-face .label { display: flex; justify-content: space-between; }
+.flip-face .fh { display: block; margin-top: auto; font-size: clamp(22px, 2.1vw, 28px); font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
+.flip-face .fp { display: block; margin-top: 12px; font-size: 16px; line-height: 1.7; }
+.flip-front .fp { color: var(--muted); }
+.flip-front .hint { margin-top: 20px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--accent); font-weight: 600; }
+.flip-front .hint::before { content: '↻'; font-size: 15px; }
+.flip.is-flipped .flip-inner { transform: rotateY(180deg); }
+@media (hover: hover) and (pointer: fine) {
+  .flip:hover .flip-inner { transform: rotateY(180deg); }
+}
+.flip:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+@media (max-width: 900px) {
+  .flips { grid-template-columns: minmax(0, 1fr); }
+  .flip { height: 248px; }
+}
+
+/* result grid */
+.results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+.results li { padding: 22px 0; border-top: 1px solid var(--rule); }
+.results .label { color: var(--accent); display: block; margin-bottom: 8px; }
+.results p { font-size: 17px; line-height: 1.7; font-weight: 500; }
+@media (max-width: 640px) { .results { grid-template-columns: minmax(0, 1fr); } }
+
+/* =========================================================
+   02 HANJA — user flow
+   ========================================================= */
+.compare { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.compare li { border: 1px solid var(--ink); background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.compare .svc { font-weight: 700; font-size: 18px; letter-spacing: -.015em; }
+.compare .gap { color: var(--muted); font-size: 15px; }
+.compare .fix { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 16px; font-weight: 600; color: var(--accent); }
+.compare .fix::before { content: '→ '; }
+@media (max-width: 860px) { .compare { grid-template-columns: minmax(0, 1fr); } }
+
+.flow { margin: clamp(32px, 5vw, 64px) 0 clamp(24px, 4vw, 48px); }
+.flow-cap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.flow-cap .label:first-child { color: var(--accent); }
+.flow-cap .label:last-child { color: var(--muted); }
+.flow svg { width: 100%; height: auto; display: block; overflow: visible; }
+.flow .svg-narrow { display: none; max-width: 420px; margin: 0 auto; }
+@media (max-width: 760px) {
+  .flow .svg-wide { display: none; }
+  .flow .svg-narrow { display: block; }
+}
+.flow path { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 1; vector-effect: non-scaling-stroke; }
+.flow .fn rect { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.flow .fn text { font-family: var(--sans); font-weight: 600; fill: var(--ink); letter-spacing: -.02em; }
+.flow .fn.sub rect { fill: var(--paper); stroke-dasharray: 5 4; }
+.flow .fn.key rect { fill: var(--ink); }
+.flow .fn.key text { fill: var(--paper); }
+.flow .fn .idx { font-family: var(--serif); font-weight: 400; fill: var(--accent); }
+
+.feat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+.feat li { padding: 22px 0; border-top: 1px solid var(--rule); }
+.feat h4 { font-size: 19px; font-weight: 700; letter-spacing: -.015em; margin-bottom: 6px; display: flex; gap: 10px; align-items: baseline; }
+.feat h4 span { font-family: var(--serif); font-weight: 400; color: var(--accent); font-size: 22px; }
+.feat p { color: var(--muted); font-size: 16px; line-height: 1.75; }
+@media (max-width: 760px) { .feat { grid-template-columns: minmax(0, 1fr); } }
+.meta-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 24px; font-size: 17px; }
+.meta-dl dt { color: var(--accent); }
+.meta-dl dd { font-weight: 500; }
+
+/* =========================================================
+   03 / 04 STAGE — fullscreen pinned + counter
+   ========================================================= */
+.stage { position: relative; }
+.stage-inner {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px;
+  align-items: center;
+}
+.stage-aside { display: flex; flex-direction: column; gap: 20px; }
+.counter { display: flex; align-items: flex-start; font-family: var(--serif); font-size: clamp(132px, 19vw, 300px); line-height: 1; letter-spacing: -.015em; }
+.cnt-mask { display: block; height: 1em; overflow: hidden; }
+.cnt-track { display: flex; flex-direction: column; transition: transform .8s var(--ease); }
+.cnt-track span { display: block; height: 1em; line-height: 1; }
+.cnt-total { font-size: .16em; margin: .45em 0 0 .35em; opacity: .7; letter-spacing: .02em; }
+.ticks { display: flex; gap: 6px; max-width: 360px; }
+.ticks li { flex: 1; padding-top: 10px; border-top: 2px solid rgba(242, 238, 227, .25); font-size: 12px; opacity: .55; transition: border-color .5s var(--ease), opacity .5s var(--ease); font-variant-numeric: tabular-nums; }
+.ticks li.is-on { border-color: var(--paper); opacity: 1; }
+.steps { display: grid; }
+.step { padding: 28px 0; border-top: 1px solid var(--rule); }
+.step-no { display: block; margin-bottom: 14px; opacity: .75; }
+.step h4 small { display: block; margin-top: .45em; font-size: .38em; font-weight: 500; letter-spacing: -.02em; opacity: .75; }
+.step h4 { font-size: clamp(34px, 4.6vw, 64px); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; margin-bottom: clamp(16px, 2vw, 28px); }
+.step p { font-size: clamp(16px, 1.45vw, 20px); line-height: 1.85; max-width: 30em; }
+.stage-bar { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 28px; height: 1px; background: rgba(242, 238, 227, .22); }
+.stage-bar i { position: absolute; inset: 0; background: var(--paper); transform: scaleX(0); transform-origin: left; }
+
+html:not(.anim) .stage-aside, html:not(.anim) .stage-bar { display: none; }
+html:not(.anim) .stage-inner { grid-template-columns: minmax(0, 1fr); }
+.anim .stage { height: 100vh; height: 100svh; }
+.anim .stage-inner { height: 100%; padding-top: var(--header-h); padding-bottom: 72px; }
+.anim .step {
+  grid-area: 1 / 1; border-top: 0; padding: 0;
+  opacity: 0; transform: translateY(28px); pointer-events: none;
+  transition: opacity .55s var(--ease), transform .8s var(--ease);
+}
+.anim .step.is-active { opacity: 1; transform: none; pointer-events: auto; transition-delay: .12s; }
+.anim .step .step-no { display: none; }
+@media (max-width: 860px) {
+  .stage-inner { grid-template-columns: minmax(0, 1fr); align-content: center; gap: 28px; }
+  .counter { font-size: clamp(96px, 30vw, 168px); }
+  .stage-aside { gap: 14px; }
+}
+
+.kv { margin-top: calc(clamp(56px, 8vw, 112px) * -0.4); margin-bottom: clamp(48px, 7vw, 96px); }
+.kv img { width: 100%; height: auto; box-shadow: 0 30px 60px rgba(0, 0, 0, .25); }
+.step-img {
+  display: block; width: min(100%, 440px); height: auto; max-height: 30vh; max-height: 30svh; object-fit: contain; object-position: left center;
+  margin-top: clamp(16px, 2vw, 28px); filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .3));
+}
+@media (max-width: 860px) { .step-img { max-height: 22vh; max-height: 22svh; } }
+.outcome { font-size: clamp(28px, 4vw, 52px); font-weight: 700; letter-spacing: -.02em; line-height: 1.25; }
+.insight { margin-top: clamp(28px, 3vw, 40px); padding-top: 24px; border-top: 1px solid var(--rule); }
+.insight p { margin-top: 12px; font-size: 17px; line-height: 1.85; max-width: 40em; }
+.quote { font-size: clamp(20px, 2.2vw, 28px); font-weight: 500; letter-spacing: -.015em; line-height: 1.55; }
+.quote::before { content: '“'; font-family: var(--serif); font-size: 1.6em; line-height: 0; vertical-align: -.35em; margin-right: .1em; opacity: .8; }
+.quote::after { content: '”'; font-family: var(--serif); font-size: 1.6em; line-height: 0; vertical-align: -.35em; margin-left: .1em; opacity: .8; }
+
+/* =========================================================
+   05 MAG — PDF 'PROJECT 02' 페이지 레이아웃 계승
+   (크림 바탕 + 크림슨 포인트, 가는 선 끝의 붉은 점)
+   ========================================================= */
+[data-accent="mag"] { --accent: var(--crimson); }
+.mag-head-note { display: block; margin-top: 10px; font-size: 13px; color: var(--muted); letter-spacing: 0; }
+.mag-title-ast { color: var(--accent); }
+.mag-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
+.mag-block + .mag-block { margin-top: clamp(48px, 6vw, 80px); }
+.mag-h {
+  position: relative; display: inline-block; padding: 0 22px 6px 0;
+  font-size: clamp(24px, 2.4vw, 30px); font-weight: 600; letter-spacing: -.02em; line-height: 1.3;
+  border-bottom: 1px solid var(--ink); margin-bottom: clamp(20px, 2.4vw, 28px);
+}
+.mag-h::before { content: ''; position: absolute; right: 100%; bottom: -1px; width: var(--gutter); height: 1px; background: var(--ink); }
+.mag-h::after { content: ''; position: absolute; right: -5px; bottom: -5px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+.mag-items > li + li { margin-top: clamp(20px, 2.4vw, 30px); }
+.mag-items h4 { font-size: clamp(20px, 2vw, 26px); font-weight: 500; letter-spacing: -.02em; line-height: 1.4; }
+.mag-items h4 em, .mag-items h4.all { font-style: normal; color: var(--accent); }
+.mag-items h4.all { font-weight: 600; }
+.mag-items p { margin-top: 8px; font-size: 16px; line-height: 1.75; color: var(--muted); }
+.mag-items .fn { display: block; margin-top: 4px; font-size: 12.5px; color: var(--muted); }
+.mag-items .fn::before { content: none; }
+
+.mag-result { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px clamp(24px, 4vw, 56px); align-items: end; }
+.mag-follow .k { font-size: 20px; font-weight: 600; }
+.mag-follow .k small { font-size: 11px; font-weight: 500; color: var(--muted); margin-left: 4px; }
+.mag-follow .stat-num { color: var(--accent); font-family: var(--sans); font-weight: 500; font-size: clamp(64px, 7vw, 96px); letter-spacing: -.03em; line-height: 1; margin-top: 6px; }
+.mag-follow .unit { font-size: .82em; margin-left: .04em; }
+.mag-collab li { font-size: clamp(18px, 1.8vw, 22px); font-weight: 500; color: var(--accent); letter-spacing: -.02em; line-height: 1.4; }
+.mag-collab li + li { margin-top: 14px; }
+.mag-collab .sub { display: block; margin-top: 4px; font-size: 15px; color: var(--ink); font-weight: 400; }
+.mag-output { position: sticky; top: calc(var(--header-h) + 24px); }
+.mag-out-title {
+  position: relative; display: inline-block; float: right; margin-bottom: 8px; padding: 0 0 4px 18px;
+  font-size: clamp(28px, 3vw, 40px); font-weight: 700; letter-spacing: -.01em; line-height: 1; text-transform: uppercase;
+  border-bottom: 1px solid var(--ink);
+}
+.mag-out-title::before { content: ''; position: absolute; left: -5px; bottom: -5px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+.collage { clear: both; position: relative; aspect-ratio: 100 / 104; container-type: inline-size; }
+.collage > * { position: absolute; margin: 0; }
+.collage img { width: 100%; height: auto; }
+.cl-phone { left: 10%; top: -1%; width: 90% !important; }
+.cl-item figcaption { font-size: max(10px, 2.6cqw); color: var(--muted); line-height: 1.3; margin-bottom: .4em; white-space: nowrap; }
+.cl-item img { filter: drop-shadow(0 10px 18px rgba(28, 27, 24, .18)); }
+.cl-music { left: 0; top: 0; width: 31%; }
+.cl-hype  { left: 3%; top: 49%; width: 31%; }
+.cl-comic { right: 0; top: 62%; width: 30%; }
+.cl-best {
+  right: 0; top: 18%; width: 36%; padding: 4cqw 3.4cqw;
+  background: #fff; border: 1px solid #b9b5ad; box-shadow: 0 10px 22px rgba(28, 27, 24, .14);
+}
+.cl-best::after { content: ''; position: absolute; right: -5px; top: -5px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.cl-best .k { text-align: center; font-size: max(10px, 2.5cqw); font-weight: 500; color: #1c1b18; }
+.cl-best .v {
+  display: flex; align-items: center; justify-content: center; gap: 2cqw; margin: .5cqw 0 2.4cqw;
+  font-size: 9cqw; font-weight: 500; letter-spacing: -.02em; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums;
+}
+.cl-best .v:last-child { margin-bottom: 0; }
+.cl-best svg { flex: none; width: .6em; height: .6em; }
+@media (max-width: 960px) {
+  .mag-grid { grid-template-columns: minmax(0, 1fr); }
+  .mag-output { position: static; max-width: 620px; }
+}
+@media (max-width: 560px) {
+  .mag-result { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* =========================================================
+   06 ETC / CONTACT
+   ========================================================= */
+.card {
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(20px, 3vw, 40px);
+  border: 1px solid var(--ink); background: var(--paper); padding: clamp(16px, 2.4vw, 32px);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.card .ph { --ar: 1 / 1; align-self: start; }
+.card-proof { margin-top: 24px; max-width: 300px; }
+.card-proof img { width: 100%; height: auto; }
+.card-body { display: flex; flex-direction: column; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--muted); }
+.card h3 { margin-top: 18px; font-size: clamp(26px, 3vw, 40px); font-weight: 700; letter-spacing: -.02em; line-height: 1.25; }
+.card p { margin-top: 18px; font-size: 17px; line-height: 1.8; max-width: 34em; }
+.card .res { margin-top: auto; padding-top: 28px; font-size: clamp(18px, 1.8vw, 22px); font-weight: 600; letter-spacing: -.015em; }
+.card .res .big { font-family: var(--serif); font-size: 2.3em; font-weight: 400; line-height: 1; margin-right: 6px; vertical-align: -.1em; }
+@media (max-width: 760px) {
+  .card { grid-template-columns: minmax(0, 1fr); box-shadow: 5px 5px 0 var(--ink); }
+  .card .ph { --ar: 1 / 1; }
+  .card-proof { max-width: 100%; }
+}
+
+.etc-list { margin-top: clamp(40px, 6vw, 72px); border-top: 1px solid var(--ink); }
+.etc-list li {
+  display: grid; grid-template-columns: 168px minmax(0, 1fr) auto; gap: 16px; align-items: baseline;
+  padding: 20px 0; border-bottom: 1px solid var(--rule);
+}
+.etc-list .label { color: var(--muted); }
+.etc-list b { font-size: clamp(18px, 1.8vw, 22px); font-weight: 700; letter-spacing: -.015em; }
+.etc-list .sub { color: var(--muted); font-size: 15px; }
+@media (max-width: 640px) {
+  .etc-list li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+.contact { padding-bottom: clamp(64px, 8vw, 120px); }
+.contact-lead { font-size: clamp(18px, 2vw, 24px); font-weight: 500; letter-spacing: -.01em; margin-bottom: 20px; color: var(--muted); }
+.mail {
+  display: inline-block; position: relative;
+  font-family: var(--serif); font-size: clamp(34px, 8.4vw, 132px); line-height: 1.05; letter-spacing: -.02em;
+  overflow-wrap: anywhere; word-break: break-all; max-width: 100%;
+}
+.mail::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: .02em; height: 2px; background: currentColor;
+  transform: scaleX(.12); transform-origin: left; transition: transform .8s var(--ease);
+}
+.mail:hover::after { transform: scaleX(1); }
+.mail .arr { display: inline-block; font-style: italic; transition: transform .6s var(--ease); }
+.mail:hover .arr { transform: translate(.08em, -.08em); }
+
+.site-footer { border-top: 1px solid var(--ink); }
+.ft { display: flex; justify-content: space-between; gap: 16px; padding-top: 18px; padding-bottom: 28px; color: var(--muted); }
+
+/* =========================================================
+   CUSTOM CURSOR
+   ========================================================= */
+.cursor-dot, .cursor-ring { display: none; }
+.has-cursor, .has-cursor * { cursor: none !important; }
+.has-cursor .cursor-dot, .has-cursor .cursor-ring {
+  display: block; position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none;
+  mix-blend-mode: difference; opacity: 0; transition: opacity .3s;
+}
+.has-cursor.cursor-on .cursor-dot, .has-cursor.cursor-on .cursor-ring { opacity: 1; }
+.cursor-dot i { display: block; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #fff; }
+.cursor-ring i {
+  display: block; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; border: 1px solid #fff;
+  transition: transform .45s var(--ease), background-color .45s var(--ease);
+}
+.cursor-ring.is-hover i { transform: scale(1.75); background: #fff; }
+
+/* =========================================================
+   REDUCED MOTION — 모든 애니메이션 비활성화
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .hero-scroll i { transform: scaleX(1); }
+}
+</style>
+</head>
+
+<body>
+<div class="grid-lines" aria-hidden="true"></div>
+<div class="grid-dots" aria-hidden="true"></div>
+<div class="grid-draw" aria-hidden="true"></div>
+
+<div class="cursor-dot" aria-hidden="true"><i></i></div>
+<div class="cursor-ring" aria-hidden="true"><i></i></div>
+
+<header class="site-header">
+  <div class="wrap hd">
+    <a href="#top" class="hd-logo">Jun Jaehyun</a>
+    <nav class="toc label" aria-label="목차">
+      <a href="#profile" data-toc="profile"><span class="toc-t"><span class="full">Profile</span><span class="short">P</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#crawler" data-toc="crawler"><span class="toc-t"><span class="full"><b>01</b>Crawler</span><span class="short">01</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#stella" data-toc="stella"><span class="toc-t"><span class="full"><b>02</b>Stella</span><span class="short">02</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#airism" data-toc="airism"><span class="toc-t"><span class="full"><b>03</b>AIRism</span><span class="short">03</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#mag" data-toc="mag"><span class="toc-t"><span class="full"><b>04</b>@satan.mag</span><span class="short">04</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#hanja" data-toc="hanja"><span class="toc-t"><span class="full"><b>05</b>Kanji App</span><span class="short">05</span></span><span class="toc-bar"><i></i></span></a>
+      <a href="#contact" data-toc="contact"><span class="toc-t"><span class="full">Contact</span><span class="short">C</span></span><span class="toc-bar"><i></i></span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- =====================================================
+     HERO
+     ===================================================== -->
+<section class="hero" id="top" data-chapter="">
+  <div class="wrap hero-inner">
+    <p class="hero-name" data-hero>
+      <span class="ko">전재현</span>
+      <span class="en label">Jun Jaehyun — Marketer</span>
+    </p>
+    <h1 class="hero-title">
+      <span class="line"><span>Finds the data.</span></span>
+      <span class="line"><span><em>Builds</em> the tool.</span></span>
+    </h1>
+    <p class="hero-ko" data-hero>
+      마케터 전재현입니다.<br>
+      <span class="hero-ko-sub">데이터에 숨은 소비자의 니즈를 찾아내고,<br>
+      데이터를 가져올 도구까지 직접 만듭니다.</span>
+    </p>
+  </div>
+  <a href="#profile" class="hero-scroll label"><i></i>Scroll</a>
+</section>
+
+<!-- =====================================================
+     PROFILE
+     ===================================================== -->
+<section class="sec" id="profile" data-chapter="Profile">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <p class="label">Profile</p>
+      <h2 class="sec-title">전재현</h2>
+    </header>
+
+    <div class="profile-grid">
+      <div class="pf" data-reveal>
+        <h3 class="label">경력</h3>
+        <ul class="tl">
+          <li><time>2026.05 ~ 현재</time><div><b>프리즘커뮤니케이션</b><br><span class="sub">혼다코리아 디지털 채널 운영, 데이터 분석, 브랜드 행사 운영</span></div></li>
+          <li><time>2025.04 ~ 2025.06</time><div><b>칸타코리아</b><br><span class="sub">사무보조</span></div></li>
+        </ul>
+      </div>
+
+      <div class="pf" data-reveal>
+        <h3 class="label">학력</h3>
+        <ul class="tl">
+          <li><time>2026.08</time><div><b>홍익대학교</b><br><span class="sub">경영학 / 국어국문학(부전공) 졸업</span></div></li>
+          <li><time>&nbsp;</time><div><b>국비교육 개발자 부트캠프 과정(일본취업반)</b><br><span class="sub">조기 수료</span></div></li>
+        </ul>
+      </div>
+
+      <div class="pf" data-reveal>
+        <h3 class="label">자격 · 어학</h3>
+        <ul class="chips">
+          <li>TOEIC 955</li><li>OPIc AL</li><li>JLPT N1</li><li>ADsP</li>
+        </ul>
+      </div>
+
+      <div class="pf" data-reveal>
+        <h3 class="label">툴</h3>
+        <ul class="chips">
+          <li>GA4</li><li>Figma</li><li>Notion</li><li>MS/Google Office</li><li>Python(AI 활용 개발)</li>
+        </ul>
+      </div>
+
+      <div class="pf wide" data-reveal>
+        <h3 class="label">대내외 활동</h3>
+        <ul class="tl">
+          <li><time>2025.12 ~ 2026.01</time><div>KPR 대학생 아이디어 공모전 참가(팀장)</div></li>
+          <li><time>2025.06 ~ 2025.08</time><div>OB맥주 크리에이티브 공모전 파이널리스트(팀장)</div></li>
+          <li><time>2025.06 ~ 2025.07</time><div>대홍기획 공모전 '세상에 나쁜 아이디어는 없다' 선정(팀장)</div></li>
+          <li><time>2025.01 ~ 2025.03</time><div>교내 창작 동아리 문집 발행</div></li>
+          <li><time>2024.10</time><div>교내 문학상 대상</div></li>
+          <li><time>2024.03 ~ 2024.12</time><div>교내 음악감상 동아리 부회장</div></li>
+          <li><time>2023.12 ~ 2024.12</time><div>인스타그램 매거진 @satan.mag 기획·운영</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     WORKS INDEX
+     ===================================================== -->
+<section class="sec" id="works" data-chapter="Works" style="padding-top:0">
+  <div class="wrap">
+    <h2 class="works-title" data-reveal>Works</h2>
+    <nav class="index-list" data-reveal aria-label="프로젝트 목차">
+      <a href="#crawler" style="--c:var(--green)"><span class="no">01</span><span class="t">인스타그램 크롤러 개발</span></a>
+      <a href="#stella" style="--c:var(--red)"><span class="no">02</span><span class="t">스텔라 아르투아</span></a>
+      <a href="#airism" style="--c:var(--blue)"><span class="no">03</span><span class="t">에어리즘</span></a>
+      <a href="#mag" style="--c:var(--crimson)"><span class="no">04</span><span class="t">@satan.mag</span></a>
+      <a href="#hanja" style="--c:var(--gray)"><span class="no">05</span><span class="t">한자 학습 웹앱</span></a>
+    </nav>
+  </div>
+</section>
+
+<!-- =====================================================
+     01 CRAWLER  (point: green)
+     ===================================================== -->
+<section class="sec" id="crawler" data-accent="green" data-chapter="01 — Crawler">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <div class="sec-no">01</div>
+      <div>
+        <p class="sec-kicker label">프리즘커뮤니케이션 / 혼다코리아</p>
+        <h2 class="sec-title">인스타그램 크롤러 개발</h2>
+        <p class="sec-lead">유료 분석 서비스의 요약본에 의존하던 경쟁사 분석을, 직접 만든 크롤러로 원본 데이터 기반으로 바꿨습니다.</p>
+      </div>
+    </header>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">개요</h3>
+      <div class="row-body">
+        <p>Python으로 Chromium 브라우저를 직접 띄워, 로그인한 상태로 자사·경쟁사 인스타그램 게시물을 모으는 크롤러입니다. 브라우저를 화면에 띄워둔 채 수집해 이상 동작을 바로 확인할 수 있게 했고, 수집 속도에는 딜레이를 두었습니다. 팔로워 수 기록은 배치 파일과 작업 스케줄러로 매일 자동 실행됩니다.</p>
+        <dl class="meta-dl" style="margin-top:24px">
+          <dt class="label">Language</dt><dd>Python</dd>
+          <dt class="label">Browser</dt><dd>Chromium (브라우저 자동화)</dd>
+          <dt class="label">Automation</dt><dd>Windows 배치 파일 + 작업 스케줄러</dd>
+          <dt class="label">Tools</dt><dd>크롬 개발자 도구, GitHub</dd>
+          <dt class="label">Method</dt><dd>AI 활용 바이브 코딩 (타 AI 교차검증 프롬프트)</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <!-- 개발 과정: 배경 → 자료 수집 및 기획 → 바이브 코딩 → 결과물 보정 및 분석 (스크롤에 따라 단계별로 켜짐) -->
+  <div class="pipe" data-pipe>
+    <div class="wrap pipe-inner">
+      <div class="pipe-cap">
+        <span class="label">Process — 배경 → 자료 수집 및 기획 → 바이브 코딩 → 결과물 보정 및 분석</span>
+        <span class="label">Scroll to run</span>
+      </div>
+      <div class="pipe-track">
+        <div class="pipe-node">
+          <div class="pn-top"><span class="pn-no">1</span><span class="pn-en">Background</span></div>
+          <h4>배경<small>원데이터 확보 어려움</small></h4>
+          <ul>
+            <li>자사 데이터는 메타 비즈니스 스위트에서 수작업으로 가공</li>
+            <li>경쟁사 데이터는 유료 서비스(Rindi)의 다이제스트에만 의존</li>
+            <li>월간 상위 게시물 정도만 볼 수 있어, 어떤 게시물이 왜 반응을 얻었는지 근거를 갖고 말하기 어려움</li>
+          </ul>
+        </div>
+        <div class="pipe-link" aria-hidden="true"><i></i></div>
+        <div class="pipe-node">
+          <div class="pn-top"><span class="pn-no">2</span><span class="pn-en">Research &amp; Plan</span></div>
+          <h4>자료 수집 및 기획</h4>
+          <ul>
+            <li>기존 개발자 블로그로 크롤러 구조 파악</li>
+            <li>수집한 자료를 바탕으로 개발용 프롬프트 작성</li>
+            <li>대화 맥락이 없는 다른 AI에 프롬프트를 보내 예상 입출력과 비효율을 점검. 같은 대화 안의 AI는 내 의도에 맞춰 판단할 수 있다고 봤기 때문</li>
+          </ul>
+        </div>
+        <div class="pipe-link" aria-hidden="true"><i></i></div>
+        <div class="pipe-node">
+          <div class="pn-top"><span class="pn-no">3</span><span class="pn-en">Vibe Coding</span></div>
+          <h4>바이브 코딩</h4>
+          <ul>
+            <li>타 AI로 교차검증한 프롬프팅으로 개발</li>
+            <li>개발자 도구에서 데이터가 담긴 위치를 직접 찾아 지정</li>
+            <li>리뷰 크롤러를 확장해 자사·경쟁사 게시물 전량 수집</li>
+          </ul>
+        </div>
+        <div class="pipe-link" aria-hidden="true"><i></i></div>
+        <div class="pipe-node">
+          <div class="pn-top"><span class="pn-no">4</span><span class="pn-en">Refine &amp; Analyze</span></div>
+          <h4>결과물 보정 및 분석</h4>
+          <ul>
+            <li>계정 아이디 검증식을 만들어 수집 대상과 산출 데이터를 분리</li>
+            <li>경쟁사의 저장·공유 수와 도달은 자사 평균 비율로 보정하고, 보고서에 명시</li>
+            <li>발행량 대비 반응, 해시태그로 본 경쟁사 이벤트와 참여율 분석</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="row" data-reveal>
+      <h3 class="row-label label">문제와 해결</h3>
+      <div class="row-body">
+        <div class="flips">
+          <button class="flip" type="button" aria-pressed="false">
+            <span class="flip-inner">
+              <span class="flip-face flip-front">
+                <span class="label"><span>Problem 01</span><span>캐시</span></span>
+                <span class="fh">로그인 캐시 저장 실패</span>
+                <span class="fp">브라우저가 15초 만에 닫히는 문제</span>
+                <span class="hint">해결 보기</span>
+              </span>
+              <span class="flip-face flip-back">
+                <span class="label"><span>Solution 01</span><span>캐시</span></span>
+                <span class="fh">사용자가 직접 종료하도록 수정</span>
+              </span>
+            </span>
+          </button>
+          <button class="flip" type="button" aria-pressed="false">
+            <span class="flip-inner">
+              <span class="flip-face flip-front">
+                <span class="label"><span>Problem 02</span><span>데이터</span></span>
+                <span class="fh">데이터 오염</span>
+                <span class="fp">추천 게시물까지 함께 수집됨</span>
+                <span class="hint">해결 보기</span>
+              </span>
+              <span class="flip-face flip-back">
+                <span class="label"><span>Solution 02</span><span>데이터</span></span>
+                <span class="fh">계정 아이디 검증식을 만들어 수집 대상과 산출 데이터를 분리</span>
+              </span>
+            </span>
+          </button>
+          <button class="flip" type="button" aria-pressed="false">
+            <span class="flip-inner">
+              <span class="flip-face flip-front">
+                <span class="label"><span>Problem 03</span><span>계정</span></span>
+                <span class="fh">계정 정지 위험</span>
+                <span class="fp">수집 속도가 너무 빨라 정지 직전까지 감</span>
+                <span class="hint">해결 보기</span>
+              </span>
+              <span class="flip-face flip-back">
+                <span class="label"><span>Solution 03</span><span>계정</span></span>
+                <span class="fh">딜레이 추가</span>
+                <span class="fp">브라우저를 화면에 띄워둔 덕분에 이상을 일찍 발견</span>
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">데이터 한계 보완</h3>
+      <div class="row-body">
+        <p>경쟁사의 저장·공유 수와 도달은 볼 수 없었습니다. 자사 데이터에서 해당 지표의 평균 비율을 구해 경쟁사에 적용하고, 보정치를 적용했다는 사실을 고객사 보고서에 명시했습니다.</p>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">결과</h3>
+      <div class="row-body">
+        <ul class="results">
+          <li><span class="label">Tool</span><p>유료 서비스 사용 중단, 내부 도구로 대체</p></li>
+          <li><span class="label">Data</span><p>요약본 대신 원본 데이터 확보: 경쟁사 평균 참여율, 업로드 주기, 최근 게시물 전량</p></li>
+          <li><span class="label">Scope</span><p>분석 범위 확대: 자사·경쟁사 발행량 차이, 발행량 대비 반응, 해시태그로 본 경쟁사 이벤트와 참여율</p></li>
+          <li><span class="label">Reuse</span><p>GitHub에 올려 다른 프로젝트(@satan.mag, 웹소설 시장 분석)에도 재사용</p></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row" data-reveal>
+      <h3 class="row-label label">만든 것</h3>
+      <div class="row-body">
+        <ol class="nlist">
+          <li><div><h4>리뷰 크롤러</h4><p>스튜디오 지브리展 in Jeju: 네이버 플레이스, 카카오맵, 야놀자, 구글 리뷰 수집</p></div></li>
+          <li><div><h4>팔로워 추적</h4><p>배치 파일과 작업 스케줄러로 경쟁사 팔로워 수를 매일 자동 기록</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     02 STELLA ARTOIS  (point: red / fullscreen stage)
+     ===================================================== -->
+<section class="sec is-dark" id="stella" data-accent="red" data-theme="dark" data-chapter="02 — Stella Artois">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <div class="sec-no">02</div>
+      <div>
+        <p class="sec-kicker label">OB맥주 크리에이티브 공모전 · 2025.06 ~ 08 · 전국 마케팅 공모전(팀장)</p>
+        <h2 class="sec-title">스텔라 아르투아</h2>
+        <p class="sec-lead">프리미엄 맥주가 파는 '프리미엄'과 2535가 맥주를 마시는 방식 사이의 거리를 좁힌 캠페인</p>
+      </div>
+    </header>
+    <!-- 키비주얼: GLOW-UP YOUR DAY, WITH STELLA -->
+    <figure class="kv" data-reveal><img src="assets/stella-kv.webp" alt="GLOW-UP YOUR DAY, WITH STELLA — 챌리스를 드는 순간 시작되는 글로우업" width="1920" height="1080"></figure>
+  </div>
+
+  <div class="stage" data-stage>
+    <div class="wrap stage-inner">
+      <div class="stage-aside" aria-hidden="true">
+        <span class="label">Thinking Process</span>
+        <div class="counter">
+          <span class="cnt-mask"><span class="cnt-track"><span>01</span><span>02</span><span>03</span><span>04</span></span></span>
+          <span class="cnt-total">/ 04</span>
+        </div>
+        <ol class="ticks label"><li>01</li><li>02</li><li>03</li><li>04</li></ol>
+      </div>
+      <ol class="steps">
+        <li class="step"><span class="step-no label">01</span><h4>자료조사</h4><p>국내/수입 맥주를 모아 각 브랜드가 어떤 '프리미엄'을 내세우는지 정리했습니다. 이 과정에서 스텔라 아르투아의 핵심 소구점이 '고급 안주와의 페어링', '직접 가게나 탭샵을 방문하여 식사하는 것'이라는 점을 확인했습니다.</p></li>
+        <li class="step"><span class="step-no label">02</span><h4>문제 제기</h4><p>브랜드가 지향하는 맥주의 소비 패턴과 지정된 2535 타깃의 맥주 소비 패턴은 달랐습니다. 그들은 편의점 네 캔 만 원으로 맥주를 사서 집에서 마시는 경향이 강했습니다.</p></li>
+        <li class="step"><span class="step-no label">03</span><h4>아이디에이션 / 컨셉 도출<small>해법</small></h4><p>마시는 장소가 집이라면, 스텔라다움을 집으로 가져가면 된다고 판단했습니다. 그래서 스텔라의 상징인 전용잔을 소비자의 집에 보급하는 것을 캠페인의 축으로 잡았습니다.</p></li>
+        <li class="step"><span class="step-no label">04</span><h4>IMC 제시<small>여정 설계</small></h4><p>아이디어 중 가장 설득력이 높았던 크리스마스 마켓 콘셉트의 팝업스토어를 기준점으로 삼아, 인지-체험-확산-락인으로 이어지는 소비자 여정 지도를 그렸습니다.</p><img class="step-img" src="assets/stella-popup-model.webp" alt="크리스마스 마켓 콘셉트 팝업스토어 'THE CHALICE MARKET' 3D 모델링" width="926" height="596"></li>
+      </ol>
+    </div>
+    <div class="stage-bar" aria-hidden="true"><i></i></div>
+  </div>
+
+  <div class="wrap">
+    <div class="row" data-reveal>
+      <h3 class="row-label label">결과</h3>
+      <div class="row-body">
+        <p class="outcome">330팀 중 10위, 파이널리스트</p>
+        <div class="insight">
+          <span class="label">가설 수정</span>
+          <p>처음에는 수제맥주의 성장이 프리미엄 맥주의 자리를 가져갔다고 봤습니다. 하지만 수제맥주 시장 역시 침체 중이라는 것을 확인하고, 경쟁자가 바뀐 것이 아니라 맥주를 마시는 방식이 바뀐 것이라고 결론을 고쳤습니다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row" data-reveal>
+      <h3 class="row-label label">담당자 피드백</h3>
+      <div class="row-body"><p class="quote">브랜드 헤리티지와 팝업 콘셉트의 결합, 높은 실현 가능성</p></div>
+    </div>
+    <div class="figs" data-reveal>
+      <!-- 발표 자료: 표지 -->
+      <figure class="ph" style="--ar:16/9"><img src="assets/stella-slide-title.png" alt="챌리스를 Glow-Up의 터치포인트로 만들 기획 — 발표 표지" loading="lazy" onerror="ph(this)"></figure>
+      <!-- 발표 자료: THE CHALICE MARKET 팝업스토어 -->
+      <figure class="ph" style="--ar:16/9"><img src="assets/stella-popup.webp" alt="THE CHALICE MARKET 팝업스토어 내부와 이용 방법" loading="lazy" onerror="ph(this)"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     03 AIRISM  (point: blue / fullscreen stage)
+     ===================================================== -->
+<section class="sec is-dark" id="airism" data-accent="blue" data-theme="dark" data-chapter="03 — AIRism">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <div class="sec-no">03</div>
+      <div>
+        <p class="sec-kicker label">대홍 크리에이티브 어워즈 · 2025.06 ~ 07 · 전국 마케팅 공모전(팀장)</p>
+        <h2 class="sec-title">에어리즘</h2>
+        <p class="sec-lead">'여름 속옷'에 갇힌 에어리즘을, 오래 입어 정이 드는 '애착 옷'으로 넓힌 캠페인</p>
+      </div>
+    </header>
+    <!-- 브리프보드: 내 몸에 착, 애착 에어리즘 — 애착 공방 -->
+    <figure class="kv" data-reveal><img src="assets/airism-briefboard.jpg" alt="내 몸에 착, 애착 에어리즘 — 애착 공방 브리프보드" width="2000" height="1415"></figure>
+  </div>
+
+  <div class="stage" data-stage>
+    <div class="wrap stage-inner">
+      <div class="stage-aside" aria-hidden="true">
+        <span class="label">Thinking Process</span>
+        <div class="counter">
+          <span class="cnt-mask"><span class="cnt-track"><span>01</span><span>02</span><span>03</span><span>04</span></span></span>
+          <span class="cnt-total">/ 04</span>
+        </div>
+        <ol class="ticks label"><li>01</li><li>02</li><li>03</li><li>04</li></ol>
+      </div>
+      <ol class="steps">
+        <!-- TODO(원고 보완 필요): 무인양품 커스텀 서비스의 정확한 명칭 확인 후 '커스텀 서비스' 부분 교체 -->
+        <li class="step"><span class="step-no label">01</span><h4>자료조사<small>과제와 현장</small></h4><p>과제는 에어리즘의 핵심인 땀 관리 기능은 살리되, 활동복이나 이너웨어가 아닌 영역으로 브랜드를 넓히는 것이었습니다. 책상 앞에서는 방향이 잡히지 않아, 실마리를 찾으려 매장을 직접 찾았습니다.</p></li>
+        <li class="step"><span class="step-no label">02</span><h4>문제 제기</h4><p>코튼 라인은 따로 진열되어 있었지만, 에어리즘은 속옷 진열대에 놓여 있었습니다. 매장에서조차 에어리즘은 하나의 브랜드가 아니라 속옷의 한 종류로 다뤄지고 있었습니다.</p></li>
+        <li class="step"><span class="step-no label">03</span><h4>아이디에이션 / 컨셉 도출<small>애착 옷</small></h4><p>이후 진행한 FGI에 해질 정도로 입은 바지를 입고 온 참여자가 있었습니다. 그 바지를 "애착 바지"라고 소개하는 것을 듣고, 편하고 튼튼해서 오래 입게 되는 옷이라는 에어리즘의 성격과 연결했습니다.</p></li>
+        <li class="step"><span class="step-no label">04</span><h4>IMC 제시<small>매장 내 체험</small></h4><p>무인양품의 커스텀 서비스와 유니클로 UTme!를 참고해, 고객이 직접 자신의 애착 옷을 만드는 경험을 설계했습니다. 팝업 대신 유니클로 매장 안에서 즐길 수 있는 여러 테마의 체험을 제안해, 구매 과정 자체에 브랜드 경험을 넣고 산 옷에 자연스럽게 애착이 생기도록 했습니다.</p></li>
+      </ol>
+    </div>
+    <div class="stage-bar" aria-hidden="true"><i></i></div>
+  </div>
+
+  <div class="wrap">
+    <div class="row" data-reveal>
+      <h3 class="row-label label">결과</h3>
+      <div class="row-body"><p class="outcome">1,300팀 중 80팀 선발<br><span style="font-weight:500;font-size:.62em;letter-spacing:-.015em">('세상에 나쁜 아이디어는 없다')</span></p></div>
+    </div>
+    <div class="row" data-reveal>
+      <h3 class="row-label label">담당자 피드백</h3>
+      <div class="row-body"><p class="quote">재치 있는 캠페인명, 방문하고 싶은 브랜드 공간</p></div>
+    </div>
+    <div class="figs" data-reveal>
+      <!-- 발표 자료: 내 몸에 착, 애착 에어리즘 (인식·경험·확산) -->
+      <figure class="ph" style="--ar:16/9"><img src="assets/airism-slide-title.webp" alt="내 몸에 착, 애착 에어리즘 — 인식·경험·확산 단계 요약" loading="lazy" onerror="ph(this)"></figure>
+      <!-- 발표 자료: 상황분석 -->
+      <figure class="ph" style="--ar:16/9"><img src="assets/airism-slide-analysis.webp" alt="상황분석 — 다양한 카테고리와 제품군으로 출시되는 에어리즘" loading="lazy" onerror="ph(this)"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     04 @satan.mag  (point: crimson — PDF 'PROJECT 02' 페이지 레이아웃)
+     ===================================================== -->
+<section class="sec" id="mag" data-accent="mag" data-chapter="04 — @satan.mag">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <div class="sec-no">04</div>
+      <div>
+        <p class="sec-kicker label">2023.12 ~ 2024.12 · 인스타그램 매거진 공동 운영 · 에디터</p>
+        <h2 class="sec-title">@satan.mag<span class="mag-title-ast">*</span></h2>
+        <p class="sec-lead">음악·만화·영화를 깊게 다루는 서브컬처 매거진을 운영하며, 시험 게시물의 반응 데이터로 콘텐츠 방향을 정했습니다.</p>
+        <span class="mag-head-note">*실제 종교·악마와는 관련이 없습니다.</span>
+      </div>
+    </header>
+
+    <div class="mag-grid">
+      <div class="mag-main">
+        <div class="mag-block" data-reveal>
+          <h3 class="mag-h">콘셉트 · 차별점</h3>
+          <ul class="mag-items">
+            <li>
+              <h4><em>진짜 '힙스터'</em>, <em>진짜 '마이너'</em></h4>
+              <p>기존 매거진보다 훨씬 깊이 있는 음악·만화·영화와 국내외 밈, 인터넷 문화를 다뤘습니다.</p>
+            </li>
+            <li>
+              <h4>서브컬처 매거진을 비트는 태도, <em>'투메'*</em></h4>
+              <p>초기에는 당시 유행하던 서브컬처 매거진들을 일부러 비트는 콘셉트로 운영했습니다.</p>
+              <span class="fn">*투메: Too Major의 줄임말. '너무 유명한 것을 소비한다'는 뜻으로, 힙스터에게 할 수 있는 최고의 비난</span>
+            </li>
+            <li>
+              <h4><em>Fun</em> · <em>Cool</em> · <em>Interesting</em>한 내용과 디자인</h4>
+              <p>자극적이고 흥미로운 정보를 독특하고 감각적인 레이아웃에 담았습니다.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mag-block" data-reveal>
+          <h3 class="mag-h">성과</h3>
+          <div class="mag-result">
+            <div class="mag-follow">
+              <p class="k">팔로워<small>(최고점 기준)</small></p>
+              <p class="stat-num"><span data-count="1.2" data-decimals="1">1.2</span><span class="unit">만</span></p>
+            </div>
+            <ul class="mag-collab">
+              <li>여러 SNS 매거진과 협업<span class="sub">푸더바, 티라노, k4shared 등</span></li>
+              <li>하입비스트 코리아 큐레이션 선정</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mag-block" data-reveal>
+          <h3 class="mag-h">맡은 일</h3>
+          <ul class="mag-items">
+            <li>
+              <h4 class="all">퍼포먼스 분석과 최다 좋아요</h4>
+              <p>팀 리더(디자이너)를 설득해 시험 삼아 밈 게시물을 올리고, 그 반응 데이터를 바탕으로 직접 기획·기고한 게시물이 알고리즘에 올라 계정 최다 좋아요·공유 수를 기록했습니다.</p>
+            </li>
+            <li>
+              <h4 class="all">에디터 모집</h4>
+              <p>당시 활동하던 동아리에서 음악·만화·영화에 밝은 에디터를 직접 섭외했습니다.</p>
+            </li>
+            <li>
+              <h4 class="all">레퍼런스 확보</h4>
+              <p>국내외 매거진을 분석해 게시물 템플릿과 레퍼런스를 확보했습니다.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- OUTPUT: 개별 이미지로 PDF 페이지 구성을 재현 (위치는 컨테이너 비율 기준 %) -->
+      <div class="mag-output">
+        <p class="mag-out-title">Output</p>
+        <div class="collage">
+          <img class="cl-phone" data-reveal src="assets/mag-phone.png" alt="@satan.mag 인스타그램 피드 화면" width="817" height="817" loading="lazy">
+          <figure class="cl-item cl-music" data-reveal>
+            <figcaption>*음악 소개 게시물</figcaption>
+            <img src="assets/mag-post-music.png" alt="음악 소개 게시물 — 마이너 재즈와 포크" width="261" height="298" loading="lazy">
+          </figure>
+          <figure class="cl-item cl-hype" data-reveal>
+            <figcaption>*하입비스트의 샤라웃</figcaption>
+            <img src="assets/mag-hypebeast.png" alt="하입비스트 코리아가 @satan.mag를 소개한 스토리" width="261" height="350" loading="lazy">
+          </figure>
+          <figure class="cl-item cl-comic" data-reveal>
+            <figcaption>*만화 소개 게시물</figcaption>
+            <img src="assets/mag-post-comic.png" alt="만화 소개 게시물 — 만화도 교양인가" width="256" height="292" loading="lazy">
+          </figure>
+          <div class="cl-best" data-reveal>
+            <p class="k">최다 좋아요 게시물</p>
+            <p class="v"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e8262d" d="M12 21s-7.5-4.6-10-9.2C.3 8.6 2.2 4.5 6 4.5c2.2 0 3.6 1.2 4.4 2.4h3.2c.8-1.2 2.2-2.4 4.4-2.4 3.8 0 5.7 4.1 4 7.3C19.5 16.4 12 21 12 21z"/></svg><span><span data-count="30" data-decimals="0">30</span>K+</span></p>
+            <p class="k">최다 공유 수</p>
+            <p class="v"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#1c1b18" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/></svg><span><span data-count="8.1" data-decimals="1">8.1</span>K+</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     05 HANJA APP  (point: gray)
+     ===================================================== -->
+<section class="sec" id="hanja" data-accent="gray" data-chapter="05 — Kanji App">
+  <div class="wrap">
+    <header class="sec-head has-visual" data-reveal>
+      <div class="sec-no">05</div>
+      <div class="sec-head-body">
+        <div>
+          <p class="sec-kicker label">TEAM 積み木 · 국비교육 일본어반 1차 프로젝트</p>
+          <h2 class="sec-title">한자 학습 웹앱<span class="sec-title-sub">한자오보에 <small>(오보에루 - 외우다)</small></span></h2>
+          <p class="sec-lead">국비교육 일본어반 1차 프로젝트. 일본어를 공부하며 느낀 불편을 직접 해결한 JLPT 한자 학습 웹앱</p>
+        </div>
+        <figure class="sec-visual"><img src="assets/hanja-laptop.png" alt="한자오보에 공부 화면을 띄운 노트북" width="1224" height="742"></figure>
+      </div>
+    </header>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">개요</h3>
+      <div class="row-body">
+        <dl class="meta-dl">
+          <dt class="label">Team</dt><dd>TEAM 積み木, 6명</dd>
+          <dt class="label">Role</dt><dd>팀장, Git 관리 및 코드 통합</dd>
+          <dt class="label">Stack</dt><dd>JSP, CSS, Java Servlet, Oracle, Java 웹 크롤링</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">왜 만들었나</h3>
+      <div class="row-body">
+        <p>일본어반 수강생으로서 직접 한자를 외우며 겪은 불편에서 출발했습니다. 기존 서비스 세 곳을 비교해 장점은 가져오고 빈 곳을 채웠습니다.</p>
+        <ul class="compare">
+          <li><span class="svc">NihongoKanji.com</span><span class="gap">진척도 기능이 없음</span><span class="fix">진척도 추가</span></li>
+          <li><span class="svc">회독 JLPT</span><span class="gap">테스트 기능이 없음</span><span class="fix">테스트 추가</span></li>
+          <li><span class="svc">안키</span><span class="gap">사용이 어려움</span><span class="fix">사용 편의성 개선</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">사용자 흐름</h3>
+      <div class="row-body">
+        <p>로그인 → 메인 → 레벨 선택 → 섹터 공부 → 섹터 테스트, 그리고 오답 공부·누적 테스트와 마이페이지로 이어지는 흐름을 먼저 그린 뒤 기능을 나눴습니다.</p>
+      </div>
+    </div>
+
+    <!-- 사용자 흐름 다이어그램: JS가 SVG를 생성(데스크톱/모바일 두 레이아웃) -->
+    <div class="flow" data-flow>
+      <div class="flow-cap">
+        <span class="label">User Flow</span>
+        <span class="label">Login → Mypage</span>
+      </div>
+      <div class="flow-svg" role="img" aria-label="사용자 흐름: 로그인, 메인, 레벨 선택, 섹터 공부, 섹터 테스트, 그리고 오답 공부, 누적 테스트, 마이페이지"></div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">주요 기능</h3>
+      <div class="row-body">
+        <ul class="feat">
+          <li><h4><span>A</span>공부</h4><p>JLPT 시험 범위를 기준으로 크롤링한 한자 데이터를 레벨-섹터 단위로 나눠, 하루 한 섹터를 끝낼 수 있는 양으로 조절</p></li>
+          <li><h4><span>B</span>테스트</h4><p>정답·오답·모름을 즉시 표시하고 기록을 저장. 한 섹터를 끝내면 출석 체크</p></li>
+          <li><h4><span>C</span>마이페이지</h4><p>진척도, 정답률, 연속 학습일, 레벨별 남은 학습량 표시</p></li>
+          <li><h4><span>D</span>DB</h4><p>회원·학습 로그·한자 테이블을 분리하고, 로그 테이블이 회원과 한자를 잇는 구조</p></li>
+        </ul>
+        <div class="figs">
+          <!-- 발표 자료: 표지 -->
+          <figure class="ph" style="--ar:16/9"><img src="assets/hanja-slide-title.png" alt="TEAM 積み木 1차 프로젝트 한자오보에 발표 표지" loading="lazy" onerror="ph(this)"></figure>
+          <!-- 발표 자료: 테스트 화면 기능 설명 -->
+          <figure class="ph" style="--ar:16/9"><img src="assets/hanja-slide-test.png" alt="한자오보에 테스트 화면 기능 설명 슬라이드" loading="lazy" onerror="ph(this)"></figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" data-reveal>
+      <h3 class="row-label label">팀장으로서<br>배운 점</h3>
+      <div class="row-body">
+        <ol class="nlist">
+          <li><div><h4>기획 단계</h4><p>역할 분담과 작업 환경(스크립틀릿·서블릿) 정의가 늦어 혼선이 생겼습니다. 이후에는 기획서를 더 구체적으로 쓰고, 작업 환경을 먼저 합의하는 것을 원칙으로 삼았습니다.</p></div></li>
+          <li><div><h4>Git</h4><p>중복 작업, 브랜치 통합, 덮어쓰기 문제를 통합 담당으로서 직접 겪었습니다. 브랜치 사용 규칙과 잦은 공유 회의의 필요성을 배웠습니다.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     06 ETC + CONTACT
+     ===================================================== -->
+<section class="sec contact" id="contact" data-accent="ink" data-chapter="Etc. / Contact">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <p class="label">Etc.</p>
+      <h2 class="sec-title">기타</h2>
+    </header>
+
+    <article class="card" data-reveal>
+      <!-- 이미지 교체: 문집 '유영' 표지 -->
+      <figure class="ph"><img src="assets/yuyoung-cover.png" alt="홍글동 문집 '유영' 표지 목업" width="480" height="480" loading="lazy" onerror="ph(this)"></figure>
+      <div class="card-body">
+        <p class="card-meta label"><span>2025.01 ~ 03</span><span>문예 창작 동아리 기획팀</span></p>
+        <h3>홍글동 문집 '유영' 출판</h3>
+        <p>교내 문학상 대상을 받은 작품을 실은 문집으로, 원고 교정·조판, 제작비·일정 확정, 펀딩 페이지 제작과 홍보 계정 운영, 독립서점 입고까지 진행했습니다.</p>
+        <p class="res"><span class="big">176%</span>텀블벅 펀딩 달성률, 다수 독립서점 입점</p>
+        <!-- 텀블벅 펀딩 결과 화면 -->
+        <figure class="card-proof"><img src="assets/yuyoung-funding.png" alt="텀블벅 '유영: 홍글동 문집 첫 번째' 펀딩 결과 — 달성률 176%, 프로젝트 성공" width="479" height="478" loading="lazy"></figure>
+      </div>
+    </article>
+
+    <ul class="etc-list" data-reveal>
+      <li><span class="label">2024.10</span><b>교내 문학상 대상</b><span class="sub">Award</span></li>
+      <li><span class="label">Short Film</span><b>단편영화 '마감'</b><span class="sub">라인PD · 각본 기여</span></li>
+    </ul>
+
+    <div style="height:clamp(96px,14vw,200px)"></div>
+
+    <div data-reveal>
+      <p class="label" style="margin-bottom:24px">Contact</p>
+      <a class="mail" href="mailto:jaehyunjun00@naver.com">jaehyunjun00@naver.com <span class="arr">↗</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap ft label">
+    <span>© Jun Jaehyun</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var lenis = null;
+
+  /* ---------------------------------------------------------
+     1) 한자 앱 사용자 흐름 SVG 생성 (wide / narrow 두 레이아웃)
+     node: [cx, cy, step, width, kind]
+     --------------------------------------------------------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  var LABEL = { login: '로그인', main: '메인', level: '레벨 선택', study: '섹터 공부', test: '섹터 테스트', wrong: '오답 공부', cumul: '누적 테스트', my: '마이페이지' };
+  var ORDER = { login: '01', main: '02', level: '03', study: '04', test: '05' };
+  var LAYOUTS = {
+    wide: {
+      vb: [1200, 350], h: 60, fs: 18,
+      nodes: {
+        login: [110, 90, 0, 176], main: [355, 90, 1, 176], level: [600, 90, 2, 176], study: [845, 90, 3, 176], test: [1090, 90, 4, 176, 'key'],
+        wrong: [600, 300, 6, 176, 'sub'], cumul: [845, 300, 6, 176, 'sub'], my: [1090, 300, 6, 176, 'sub']
+      },
+      paths: [
+        [[[198, 90], [267, 90]], 1], [[[443, 90], [512, 90]], 2], [[[688, 90], [757, 90]], 3], [[[933, 90], [1002, 90]], 4],
+        [[[1090, 120], [1090, 200]], 5],
+        [[[1090, 200], [1090, 270]], 6], [[[1090, 200], [845, 200], [845, 270]], 6], [[[1090, 200], [600, 200], [600, 270]], 6]
+      ]
+    },
+    narrow: {
+      vb: [360, 700], h: 52, fs: 16,
+      nodes: {
+        login: [180, 50, 0, 200], main: [180, 150, 1, 200], level: [180, 250, 2, 200], study: [180, 350, 3, 200], test: [180, 450, 4, 200, 'key'],
+        wrong: [62, 640, 6, 108, 'sub'], cumul: [180, 640, 6, 108, 'sub'], my: [298, 640, 6, 108, 'sub']
+      },
+      paths: [
+        [[[180, 76], [180, 124]], 1], [[[180, 176], [180, 224]], 2], [[[180, 276], [180, 324]], 3], [[[180, 376], [180, 424]], 4],
+        [[[180, 476], [180, 560]], 5],
+        [[[180, 560], [62, 560], [62, 614]], 6], [[[180, 560], [180, 614]], 6], [[[180, 560], [298, 560], [298, 614]], 6]
+      ]
+    }
+  };
+  function svgEl(tag, attrs) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function buildFlow(L, cls) {
+    var svg = svgEl('svg', { viewBox: '0 0 ' + L.vb[0] + ' ' + L.vb[1], class: cls, 'aria-hidden': 'true' });
+    L.paths.forEach(function (p) {
+      var d = p[0].map(function (pt, i) { return (i ? 'L' : 'M') + pt[0] + ' ' + pt[1]; }).join(' ');
+      svg.appendChild(svgEl('path', { d: d, pathLength: 1, 'data-step': p[1] }));
+    });
+    Object.keys(L.nodes).forEach(function (key) {
+      var n = L.nodes[key], w = n[3], h = L.h;
+      var g = svgEl('g', { class: 'fn' + (n[4] ? ' ' + n[4] : ''), 'data-step': n[2] });
+      g.appendChild(svgEl('rect', { x: n[0] - w / 2, y: n[1] - h / 2, width: w, height: h, rx: h / 2 }));
+      var t = svgEl('text', { x: n[0], y: n[1] + 1, 'text-anchor': 'middle', 'dominant-baseline': 'central', 'font-size': w < 150 ? L.fs - 2 : L.fs });
+      t.textContent = LABEL[key];
+      g.appendChild(t);
+      if (ORDER[key]) {
+        var idx = svgEl('text', { class: 'idx', x: n[0] - w / 2 + 4, y: n[1] - h / 2 - 12, 'font-size': L.fs - 2 });
+        idx.textContent = ORDER[key];
+        g.appendChild(idx);
+      }
+      svg.appendChild(g);
+    });
+    return svg;
+  }
+  document.querySelectorAll('[data-flow] .flow-svg').forEach(function (box) {
+    box.appendChild(buildFlow(LAYOUTS.wide, 'svg-wide'));
+    box.appendChild(buildFlow(LAYOUTS.narrow, 'svg-narrow'));
+  });
+
+  /* ---------------------------------------------------------
+     2) 뒤집히는 카드 (클릭·탭·키보드)
+     --------------------------------------------------------- */
+  document.querySelectorAll('.flip').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var on = b.classList.toggle('is-flipped');
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  });
+
+  /* ---------------------------------------------------------
+     3) 헤더: 현재 꼭지 표시 + 어두운 섹션 위에서 색 반전
+     --------------------------------------------------------- */
+  var header = document.querySelector('.site-header');
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('[data-toc]')).map(function (a) {
+    return { a: a, bar: a.querySelector('.toc-bar i'), sec: document.getElementById(a.dataset.toc) };
+  }).filter(function (t) { return t.sec; });
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('[data-chapter]'));
+  var ticking = false;
+  function updateHeader() {
+    ticking = false;
+    var probe = header.offsetHeight / 2, cur = null;
+    for (var i = 0; i < chapters.length; i++) {
+      var r = chapters[i].getBoundingClientRect();
+      if (r.top <= probe && r.bottom > probe) { cur = chapters[i]; break; }
+    }
+    header.classList.toggle('is-top', !cur || cur.id === 'top');
+    var dark = !!(cur && cur.dataset.theme === 'dark');
+    header.classList.toggle('is-dark', dark);
+    header.style.setProperty('--hd-bg', dark ? getComputedStyle(cur).backgroundColor : '');
+
+    // TOC 진척도: 각 항목은 자기 섹션 시작부터 다음 항목 섹션 시작까지(마지막은 페이지 끝까지)
+    var sy = window.scrollY, maxY = document.documentElement.scrollHeight - window.innerHeight;
+    var starts = tocLinks.map(function (t) { return t.sec.getBoundingClientRect().top + sy - probe; });
+    for (var j = 0; j < tocLinks.length; j++) {
+      var st = starts[j], en = j + 1 < tocLinks.length ? starts[j + 1] : maxY;
+      var p = en > st ? Math.min(1, Math.max(0, (sy - st) / (en - st))) : (sy >= st ? 1 : 0);
+      tocLinks[j].bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      var on = p > 0 && (p < 1 || j === tocLinks.length - 1);
+      tocLinks[j].a.classList.toggle('is-active', on);
+      tocLinks[j].a.classList.toggle('is-done', p >= 1 && !on);
+      if (on) tocLinks[j].a.setAttribute('aria-current', 'true'); else tocLinks[j].a.removeAttribute('aria-current');
+    }
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(updateHeader); }
+  }, { passive: true });
+  window.addEventListener('resize', updateHeader);
+  updateHeader();
+
+  /* ---------------------------------------------------------
+     4) 커스텀 커서 (정밀 포인터 + 모션 허용 시)
+     --------------------------------------------------------- */
+  if (!reduce && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var dot = document.querySelector('.cursor-dot'), ring = document.querySelector('.cursor-ring');
+    var mx = -100, my = -100, rx = -100, ry = -100;
+    root.classList.add('has-cursor');
+    window.addEventListener('pointermove', function (e) {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = 'translate(' + mx + 'px,' + my + 'px)';
+      root.classList.add('cursor-on');
+    }, { passive: true });
+    document.addEventListener('pointerleave', function () { root.classList.remove('cursor-on'); });
+    document.addEventListener('pointerover', function (e) {
+      ring.classList.toggle('is-hover', !!e.target.closest('a, button'));
+    });
+    (function loop() {
+      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+      ring.style.transform = 'translate(' + rx.toFixed(2) + 'px,' + ry.toFixed(2) + 'px)';
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  /* ---------------------------------------------------------
+     5) 앵커 이동 (Lenis가 있으면 부드럽게)
+     --------------------------------------------------------- */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a || !lenis) return;
+    var id = a.getAttribute('href');
+    var target = id === '#top' ? 0 : document.querySelector(id);
+    if (target === null) return;
+    e.preventDefault();
+    lenis.scrollTo(target, { duration: 1.4 });
+  });
+
+  if (!root.classList.contains('anim')) return; // reduced-motion / CDN 실패 → 정적 페이지
+
+  try { initMotion(); }
+  catch (err) { console.error(err); root.classList.remove('anim'); }
+
+  function initMotion() {
+    gsap.registerPlugin(ScrollTrigger);
+    var clamp01 = gsap.utils.clamp(0, 1);
+
+    /* Lenis smooth scroll ↔ ScrollTrigger */
+    if (window.Lenis) {
+      lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    /* ---- HERO INTRO (총 2.4초 이내) ---- */
+    var cell = parseFloat(getComputedStyle(root).getPropertyValue('--cell')) || 72;
+    var draw = document.querySelector('.grid-draw');
+    var vs = [], hs = [], frag = document.createDocumentFragment(), x, y, d;
+    for (x = 0; x <= window.innerWidth; x += cell) { d = document.createElement('i'); d.className = 'gv'; d.style.left = x + 'px'; frag.appendChild(d); vs.push(d); }
+    for (y = 0; y <= window.innerHeight; y += cell) { d = document.createElement('i'); d.className = 'gh'; d.style.top = y + 'px'; frag.appendChild(d); hs.push(d); }
+    draw.appendChild(frag);
+
+    var heroBits = gsap.utils.toArray('[data-hero]');
+    var titleLines = gsap.utils.toArray('.hero-title .line > span');
+    gsap.set(heroBits, { y: 28 });
+
+    gsap.timeline({ defaults: { ease: 'power3.out' } })
+      .fromTo(vs, { scaleY: 0 }, { scaleY: 1, duration: .75, ease: 'power2.inOut', stagger: .4 / Math.max(vs.length, 1) }, 0)
+      .fromTo(hs, { scaleX: 0 }, { scaleX: 1, duration: .75, ease: 'power2.inOut', stagger: .4 / Math.max(hs.length, 1) }, .08)
+      .to('.grid-dots', { opacity: 1, duration: .5 }, .7)
+      .set('.grid-lines', { opacity: 1 }, 1.25)
+      .add(function () { draw.innerHTML = ''; }, 1.25)
+      .to(heroBits[0], { y: 0, opacity: 1, duration: .7 }, .55)
+      .fromTo(titleLines, { yPercent: 112 }, { yPercent: 0, duration: 1, stagger: .12, ease: 'power4.out' }, .7)
+      .to(heroBits[1], { y: 0, opacity: 1, duration: .8 }, 1.3)
+      .to('.site-header, .hero-scroll', { opacity: 1, duration: .6 }, 1.7);
+
+    /* ---- 섹션 진입 페이드업 ---- */
+    var reveals = gsap.utils.toArray('[data-reveal]');
+    gsap.set(reveals, { y: 36 });
+    ScrollTrigger.batch(reveals, {
+      start: 'top 88%', once: true,
+      onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: .08, overwrite: true }); }
+    });
+
+    /* ---- 01 크롤러 파이프라인 ---- */
+    var pipe = document.querySelector('[data-pipe]');
+    if (pipe) {
+      var pNodes = pipe.querySelectorAll('.pipe-node'), pLinks = pipe.querySelectorAll('.pipe-link');
+      var N = pNodes.length, span = .9 / (N - 1);
+      var setPipe = function (p) {
+        for (var i = 0; i < N; i++) {
+          var on = .03 + i * span;
+          pNodes[i].classList.toggle('is-on', p > on);
+          if (i < N - 1) {
+            var f = clamp01((p - on - .05) / (span - .08));
+            pLinks[i].style.setProperty('--fill', f);
+            pLinks[i].style.setProperty('--arrow', f >= 1 ? 1 : 0);
+          }
+        }
+      };
+      setPipe(0);
+      var mm = gsap.matchMedia();
+      mm.add('(min-width: 1101px)', function () {
+        ScrollTrigger.create({ trigger: pipe, start: 'top top', end: '+=240%', pin: true, scrub: true, onUpdate: function (s) { setPipe(s.progress); } });
+      });
+      mm.add('(max-width: 1100px)', function () {
+        ScrollTrigger.create({ trigger: pipe, start: 'top 72%', end: 'bottom 72%', onUpdate: function (s) { setPipe(s.progress); } });
+      });
+    }
+
+    /* ---- 02 한자 앱 사용자 흐름: 선이 그려지고 노드가 이어짐 ---- */
+    document.querySelectorAll('[data-flow]').forEach(function (wrap) {
+      wrap.querySelectorAll('svg').forEach(function (svg) {
+        var paths = svg.querySelectorAll('path'), nodes = svg.querySelectorAll('.fn');
+        gsap.set(paths, { strokeDashoffset: 1 });
+        gsap.set(nodes, { opacity: 0, y: 10 });
+        var tl = gsap.timeline({ scrollTrigger: { trigger: wrap, start: 'top 78%', end: 'bottom 50%', scrub: .6 } });
+        for (var s = 0; s <= 6; s++) {
+          var sp = svg.querySelectorAll('path[data-step="' + s + '"]');
+          var sn = svg.querySelectorAll('.fn[data-step="' + s + '"]');
+          if (sp.length) tl.to(sp, { strokeDashoffset: 0, duration: .8, ease: 'none' });
+          if (sn.length) tl.to(sn, { opacity: 1, y: 0, duration: .5, stagger: .15, ease: 'power2.out' }, sp.length ? '-=.15' : '>');
+        }
+      });
+    });
+
+    /* ---- 03 / 04 풀스크린 고정 + 번호 카운터 ---- */
+    document.querySelectorAll('[data-stage]').forEach(function (stage) {
+      var steps = stage.querySelectorAll('.step'), ticks = stage.querySelectorAll('.ticks li');
+      var track = stage.querySelector('.cnt-track'), bar = stage.querySelector('.stage-bar i');
+      var n = steps.length, cur = -1;
+      var setStep = function (i) {
+        if (i === cur) return;
+        cur = i;
+        for (var k = 0; k < n; k++) {
+          steps[k].classList.toggle('is-active', k === i);
+          if (ticks[k]) ticks[k].classList.toggle('is-on', k <= i);
+        }
+        track.style.transform = 'translateY(' + (-i) + 'em)';
+      };
+      setStep(0);
+      ScrollTrigger.create({
+        trigger: stage, start: 'top top',
+        end: function () { return '+=' + Math.round(window.innerHeight * (n - .3)); },
+        pin: true, scrub: true, invalidateOnRefresh: true,
+        onUpdate: function (s) {
+          setStep(Math.min(n - 1, Math.floor(s.progress * n)));
+          bar.style.transform = 'scaleX(' + s.progress + ')';
+        }
+      });
+    });
+
+    /* ---- 05 성과 숫자 카운트업 ---- */
+    document.querySelectorAll('[data-count]').forEach(function (el) {
+      var to = parseFloat(el.dataset.count), dec = parseInt(el.dataset.decimals || '0', 10), o = { v: 0 };
+      el.textContent = (0).toFixed(dec);
+      ScrollTrigger.create({
+        trigger: el, start: 'top 88%', once: true,
+        onEnter: function () {
+          gsap.to(o, { v: to, duration: 1.8, ease: 'power2.out', delay: .2, onUpdate: function () { el.textContent = o.v.toFixed(dec); } });
+        }
+      });
+    });
+
+    /* 폰트·이미지 로드 후 위치 재계산 */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+    window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+  }
+})();
+</script>
+</body>
+</html>
